@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, request, url_for, send_file
+from flask import Flask, render_template, redirect, request, url_for, send_file, session
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from flask_sqlalchemy import SQLAlchemy
@@ -12,8 +12,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 
-
-
 class CodeRepo(db.Model):
     __tablename__ = 'CodeRepo'
     id = db.Column(db.Integer, primary_key=True)
@@ -22,16 +20,8 @@ class CodeRepo(db.Model):
     complexity = db.Column(db.String(300))
     learning_method = db.Column(db.String(300))
     preprocessing = db.Column(db.String(300))
-    
-    # def __init__(self, id, model, type_of_algorithm, complexity,learning_method, preprocessing):
-    #     self.id = id
-    #     self.model = model
-    #     self.type_of_algorithm = type_of_algorithm
-    #     self.complexity = complexity
-    #     self.learning_method = learning_method
-    #     self.preprocessing = preprocessing
-                                    
-    
+
+
 @app.route('/')
 @app.route('/library')
 def library():
@@ -45,8 +35,8 @@ def add_request():
     return render_template ('add_request.html')
     
     
-@app.route('/add_code', methods = ['POST'])
-def add_code():
+@app.route('/new_code', methods = ['POST'])
+def new_code():
     codes = CodeRepo.query.all()
     code = CodeRepo(model=request.form['model'],
                     type_of_algorithm=request.form['type_of_algorithm'],
@@ -57,6 +47,32 @@ def add_code():
     db.session.commit()
     
     return render_template("library.html", codes = codes)
+    
+    
+@app.route('/edit_code/<code_id>')
+def edit_code(code_id):
+    the_code = CodeRepo.query.filter_by(id = code_id).first()
+    return render_template('edit_code.html', code = the_code)    
+    
+    
+@app.route('/update_code/<code_id>', methods=["POST"])
+def update_code(code_id):
+    the_code = CodeRepo.query.filter_by(id = code_id).first()
+    the_code.model=request.form['model']
+    the_code.type_of_algorithm=request.form['type_of_algorithm']
+    the_code.complexity=request.form['complexity']
+    the_code.learning_method=request.form['learning_method']
+    the_code.preprocessing=request.form['preprocessing']
+    db.session.commit()
+    return redirect(url_for("library"))
+    
+    
+@app.route('/delete_code/<code_id>')
+def delete_code(code_id):
+    the_code = CodeRepo.query.filter_by(id = code_id).first()
+    db.session.delete(the_code)
+    db.session.commit()
+    return redirect(url_for("library"))
     
     
     
