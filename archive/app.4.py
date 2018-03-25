@@ -46,12 +46,6 @@ def library():
     return render_template("library.html", codes = codes)
     
     
-@app.route('/download', methods=['GET'])
-def download():
-    file_data = Files.query.filter_by(id=1).first()
-    return send_file(BytesIO(file_data.data), attachment_filename='file.pdf', as_attachment=True)      
-    
-    
 @app.route('/add_request')
 def add_request():
     categories = Categories.query.all()

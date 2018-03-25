@@ -3,7 +3,7 @@
 
 <h3>Add Code</h3>
 <div class="row">
-    <form action="{{url_for('new_code') }}" method="POST" enctype="multipart/form-data" class="col s12">
+    <form action="{{url_for('new_code') }}" method="POST" class="col s12">
 
         <div class="row">
             <div class="input-field col s12">
@@ -14,14 +14,9 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <i class="material-icons prefix">poll</i>
-                <select id="type_of_algorithm" name="type_of_algorithm">
-                  <option value="" disabled selected>Choose Category</option>
-                  {% for category in categories %}
-                      <option value={{category.type_of_algorithm}}>{{category.type_of_algorithm}}</option>
-                  {% endfor %}
-                </select>
-                <label>Type</label>
+                <i class="material-icons prefix">assignment</i>
+                <input id="type_of_algorithm" name="type_of_algorithm" type="text">
+                <label for="icon_prefix">Type of Algorithm</label>
             </div>
         </div>
         <div class="row">
@@ -46,18 +41,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12">
-                <!--<form method="POST" action="/upload" enctype="multipart/form-data">-->
-                <div class="form-group">
-                    <input type="file" name="inputFile">
-                </div>
-                <!--<button type="submit" class="btn btn-default">Submit</button>-->
-                <!--</form>-->
-            </div>
-            <div class="row">
-                <button class="btn waves-effect waves-light" type="submit" name="action">ADD FILE
+            <button class="btn waves-effect waves-light" type="submit" name="action">Add Code
              </button>
-            </div>
         </div>
     </form>
 </div>

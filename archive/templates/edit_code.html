@@ -13,18 +13,9 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <i class="material-icons prefix">poll</i>
-                <select id="type_of_algorithm" name="type_of_algorithm">
-                  <option value="" disabled selected>Choose Type</option>
-                  {% for cat in categories %}
-                      {% if cat.type_of_algorithm == code.type_of_algorithm%}
-                      <option value="{{cat.type_of_algorithm}}" selected >{{cat.type_of_algorithm}}</option>
-                      {% else %}
-                       <option value="{{cat.type_of_algorithm}}">{{cat.type_of_algorithm}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-                <label>Type of Algorithm</label>
+                <i class="material-icons prefix">assignment</i>
+                <input id="type_of_algorithm" name="type_of_algorithm" type="text" class="validate" value="{{code.type_of_algorithm}}">
+                <label for="icon_prefix">type_of_algorithm</label>
             </div>
         </div>
         <div class="row">
@@ -52,14 +43,6 @@
             <button class="btn waves-effect waves-light" type="submit" name="action">Commit Edits
              </button>
         </div>
- 
-        <!--<form method="GET" action="/download" enctype="multipart/form-data">-->
-        <!--        <div class="form-group">-->
-        <!--            <label for="inputFile">File input</label>-->
-        <!--            <input type="file" name="inputFile">-->
-        <!--        </div>-->
-        <!--        <button type="Download" class="btn btn-default">Download</button>-->
-        <!--    </form>    -->
     </form>
 </div>
 

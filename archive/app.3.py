@@ -46,44 +46,29 @@ def library():
     return render_template("library.html", codes = codes)
     
     
-@app.route('/download', methods=['GET'])
-def download():
-    file_data = Files.query.filter_by(id=1).first()
-    return send_file(BytesIO(file_data.data), attachment_filename='file.pdf', as_attachment=True)      
-    
-    
 @app.route('/add_request')
 def add_request():
-    categories = Categories.query.all()
-    return render_template ('add_request.html', categories = categories)
+    return render_template ('add_request.html')
     
     
 @app.route('/new_code', methods = ['POST'])
 def new_code():
     codes = CodeRepo.query.all()
-    file = request.files['inputFile']
-    newFile = Files(name=file.filename, data=file.read())
     code = CodeRepo(model=request.form['model'],
                     type_of_algorithm=request.form['type_of_algorithm'],
                     complexity=request.form['complexity'],
                     learning_method=request.form['learning_method'],
                     preprocessing=request.form['preprocessing'])
     db.session.add(code)
-    db.session.add(newFile)
     db.session.commit()
+    
     return render_template("library.html", codes = codes)
-# def upload():
-#     file = request.files['inputFile']
-#     newFile = Files(name=file.filename, data=file.read())
-#     db.session.add(newFile)
-#     db.session.commit()
     
     
 @app.route('/edit_code/<code_id>')
 def edit_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    categories = Categories.query.all()
-    return render_template('edit_code.html', code = the_code, categories = categories)    
+    return render_template('edit_code.html', code = the_code)    
     
     
 @app.route('/update_code/<code_id>', methods=["POST"])
@@ -105,19 +90,19 @@ def delete_code(code_id):
     db.session.commit()
     return redirect(url_for("library"))
     
-   
-# @app.route('/upload', methods=['POST'])
-# def upload():
-#     file = request.files['inputFile']
-#     newFile = Files(name=file.filename, data=file.read())
-#     db.session.add(newFile)
-#     db.session.commit()    
-#     return 'Saved' + file.filename + 'to the database'
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files['inputFile']
     
-# @app.route('/download', methods=['GET'])
-# def download():
-#     file_data = FileContents.query.filter_by(id=1).first()
-#     return send_file(BytesIO(file_data.data), attachment_filename='file.pdf', as_attachment=True)    
+    newFile = FileContents(name=file.filename, data=file.read())
+    db.session.add(newFile)
+    db.session.commit()    
+    return render_template('edit_code.html')
+    
+@app.route('/download', methods=['GET'])
+def download():
+    file_data = FileContents.query.filter_by(id=1).first()
+    return send_file(BytesIO(file_data.data), attachment_filename='file.pdf', as_attachment=True)    
     
     
     
