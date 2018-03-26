@@ -20,7 +20,7 @@
                 <tbody>
                     <tr class="odd gradeX">
                         <td>{{data.model}}</td>
-                        <td><a href="{{url_for('summary', category_id = data.type_of_algorithm)}}" class="waves-effect waves-light btn btn_small">{{data.type_of_algorithm}}</a></td>
+                        <td>{{data.type_of_algorithm}}</td>
                         <td>{{data.complexity}}</td>
                         <td class="center">{{data.learning_method}}</td>
                         <td class="center">{{data.preprocessing}}</td>
@@ -34,7 +34,7 @@
                             <a href="{{url_for('delete_code', code_id=data.id)}}" class="waves-effect waves-light btn btn_small">Delete</a>
                         </td>
                         <td class="center">
-                            <form action="{{url_for('download_code', code_id=data.id) }}" method="GET" enctype="multipart/form-data">
+                            <form method="GET" action="/download" enctype="multipart/form-data">
                                 <button type="Download" class="btn btn-default">Download</button>
                             </form>
                         </td>

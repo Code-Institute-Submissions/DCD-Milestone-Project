@@ -20,13 +20,25 @@ class CodeRepo(db.Model):
     complexity = db.Column(db.String(300))
     learning_method = db.Column(db.String(300))
     preprocessing = db.Column(db.String(300))
+    file = db.relationship('Files', backref='code')
+    
+    ## Initialize database
+    def __init__(self, id, model, type_of_algorithm, complexity,learning_method, preprocessing):
+        self.id = id
+        self.model = model
+        self.type_of_algorithm = type_of_algorithm
+        self.complexity = complexity
+        self.learning_method = learning_method
+        self.preprocessing = preprocessing
+                                    
     
     
 class Files(db.Model):
-    __tablename__ = 'files'
+    __tablename__ = 'Files'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
     data = db.Column(db.LargeBinary) 
+    code_id = db.Column(db.Integer, db.ForeignKey('CodeRepo.id'))
     
     
 class Categories(db.Model):
@@ -46,9 +58,16 @@ def library():
     return render_template("library.html", codes = codes)
     
     
+@app.route('/download', methods=['GET'])
+def download():
+    file_data = CodeRepo.query.filter_by(file).first()
+    return send_file(BytesIO(file_data.file), attachment_filename='code.pdf', as_attachment=True)      
+    
+    
 @app.route('/add_request')
 def add_request():
-    return render_template ('add_request.html')
+    categories = Categories.query.all()
+    return render_template ('add_request.html', categories = categories)
     
     
 @app.route('/new_code', methods = ['POST'])
@@ -59,16 +78,20 @@ def new_code():
                     complexity=request.form['complexity'],
                     learning_method=request.form['learning_method'],
                     preprocessing=request.form['preprocessing'])
+    file = request.files['inputFile']
+    newFile = Files(name=file.filename, data=file.read(), code = code.id)                
     db.session.add(code)
+    db.session.add(newFile)
     db.session.commit()
-    
-    return render_template("library.html", codes = codes)
-    
+    # return render_template("library.html", codes = codes)
+    return redirect(url_for("library"))
+
     
 @app.route('/edit_code/<code_id>')
 def edit_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    return render_template('edit_code.html', code = the_code)    
+    categories = Categories.query.all()
+    return render_template('edit_code.html', code = the_code, categories = categories)    
     
     
 @app.route('/update_code/<code_id>', methods=["POST"])
@@ -90,22 +113,7 @@ def delete_code(code_id):
     db.session.commit()
     return redirect(url_for("library"))
     
-@app.route('/upload', methods=['POST'])
-def upload():
-    file = request.files['inputFile']
-    
-    newFile = FileContents(name=file.filename, data=file.read())
-    db.session.add(newFile)
-    db.session.commit()    
-    return render_template('edit_code.html')
-    
-@app.route('/download', methods=['GET'])
-def download():
-    file_data = FileContents.query.filter_by(id=1).first()
-    return send_file(BytesIO(file_data.data), attachment_filename='file.pdf', as_attachment=True)    
-    
-    
-    
+
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
             port=int(os.environ.get('PORT')),

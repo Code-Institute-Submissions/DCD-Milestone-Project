@@ -3,7 +3,7 @@
 
 <h3>Edit Dataset</h3>
 <div class="row">
-    <form action="{{url_for('update_code', code_id=code.id) }}" method="POST" class="col s12">
+    <form action="{{url_for('update_code', code_id=code.id) }}" method="POST"  enctype="multipart/form-data" class="col s12">
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
@@ -49,17 +49,16 @@
             </div>
         </div>
         <div class="row">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Commit Edits
+            <div class="input-field col s12">
+                <div class="form-group">
+                    <input type="file" name="inputFile">
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn waves-effect waves-light" type="submit" name="action">ADD FILE
              </button>
+            </div>
         </div>
- 
-        <!--<form method="GET" action="/download" enctype="multipart/form-data">-->
-        <!--        <div class="form-group">-->
-        <!--            <label for="inputFile">File input</label>-->
-        <!--            <input type="file" name="inputFile">-->
-        <!--        </div>-->
-        <!--        <button type="Download" class="btn btn-default">Download</button>-->
-        <!--    </form>    -->
     </form>
 </div>
 
