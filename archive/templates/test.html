@@ -1,0 +1,10 @@
+<div class="col-xs-2 col-sm-2 col-md-0 col-lg-1"></div>
+<div class="col-md-12 col-lg-10 text-center">
+    <div class="card" id="title_card">
+        <form action="{{url_for('summary', category_id=category.type_of_algorithm) }}" method="POST" class="col s12">
+            {% for category in categories%} {% endfor %}
+        </form>
+    </div>
+</div>
+<div class="col-xs-2 col-sm-2 col-md-0 col-lg-1"></div>
+<div class="row"></div>

@@ -7,13 +7,6 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 
 
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn.cross_validation import train_test_split
-from sklearn.linear_model import LinearRegression
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -60,8 +53,6 @@ def add_request():
 def new_code():
     codes = CodeRepo.query.all()
     if not 'inputFile' in request.files:
-        return render_template ('bad.html')
-    elif not 'type_of_algorithm'in request.form:
         return render_template ('bad.html')
     else:    
         code_file = request.files['inputFile']
@@ -114,30 +105,8 @@ def summary(category_id):
         return render_template('regression.html')
     elif category_id == "classification":    
         return render_template('classification.html')
-
-
-
-
-@app.route('/classification')
-def classification():
-    dataset = pd.read_csv('salary.csv')
-    X = dataset.iloc[:, :-1].values
-    y = dataset.iloc[:, 1].values
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 0)
-    regressor = LinearRegression()
-    regressor.fit(X_train, y_train)
-    y_pred = regressor.predict(X_test)
     
-    plt.scatter(X_train, y_train, color = 'red')
-    plt.plot(X_train, regressor.predict(X_train), color = 'blue')
-    plt.title('Salary vs Experience (Training set)')
-    plt.xlabel('Years of Experience')
-    plt.ylabel('Salary')
-    plt.show()
-
-
-
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
