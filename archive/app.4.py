@@ -32,7 +32,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
-
+dataset = pd.read_csv('data.csv')
 
 
 class CodeRepo(db.Model):
@@ -135,10 +135,9 @@ def delete_code(code_id):
 @app.route('/summary/<category_id>')
 def summary(category_id):
     if category_id == "regression":
-        return redirect(url_for("regression"))
-    elif category_id == "classification": 
-        return redirect(url_for("classification"))
-
+        return render_template('regression.html')
+    elif category_id == "classification":    
+        return render_template('classification.html')
 
 
 
@@ -172,7 +171,7 @@ def classification():
     
     pred = lin_reg.predict(poly_reg.fit_transform(6.5))
     
-    return render_template('classification.html', data = X, pred = pred, plot_url=plot_url) 
+    return render_template('classification.html', data = X, pred = pred, plot_url=plot_url)
 
 
 
