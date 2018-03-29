@@ -8,41 +8,51 @@
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="model" name="model" type="text">
-                <label for="icon_prefix">Model</label>
+                <input id="name" name="name" type="text">
+                <label for="icon_prefix">Name</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">poll</i>
                 <select id="type_of_algorithm" name="type_of_algorithm">
-                  <option value="" disabled selected>Choose Category</option>
-                  {% for category in categories %}
-                      <option value={{category.type_of_algorithm}}>{{category.type_of_algorithm}}</option>
+                  <option value="" disabled selected>Choose type</option>
+                  {% for type in types %}
+                      <option value={{type.type_of_algorithm}}>{{type.type_of_algorithm}}</option>
                   {% endfor %}
                 </select>
-                <label>Type</label>
+                <label>Type of Algorithm</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">poll</i>
+                <select id="complexity" name="complexity">
+                  <option value="" disabled selected>Choose type</option>
+                  {% for grade in complexities %}
+                      <option value={{grade.complexity}}>{{grade.complexity}}</option>
+                  {% endfor %}
+                </select>
+                <label>Complexity</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">poll</i>
+                <select id="method" name="method">
+                  <option value="" disabled selected>Choose type</option>
+                  {% for met in methods %}
+                      <option value={{met.method}}>{{met.method}}</option>
+                  {% endfor %}
+                </select>
+                <label>Learning Method</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="complexity" name="complexity" type="text">
-                <label for="icon_prefix">complexity</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <i class="material-icons prefix">assignment</i>
-                <input id="learning_method" name="learning_method" type="text">
-                <label for="icon_prefix">learning_method</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <i class="material-icons prefix">assignment</i>
-                <input id="preprocessing" name="preprocessing" type="text">
-                <label for="icon_prefix">preprocessing</label>
+                <input id="author" name="author" type="text">
+                <label for="icon_prefix">author</label>
             </div>
         </div>
         <div class="row">

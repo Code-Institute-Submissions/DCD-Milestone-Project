@@ -13,17 +13,17 @@
                         <th>Type of Estimator</th>
                         <th>Complexity</th>
                         <th>Learning Method</th>
-                        <th>Required Preprocessing</th>
+                        <th>Author</th>
                     </tr>
                 </thead>
                 {% for data in codes%}
                 <tbody>
                     <tr class="odd gradeX">
-                        <td>{{data.model}}</td>
-                        <td><a href="{{url_for('summary', category_id = data.type_of_algorithm)}}" class="waves-effect waves-light btn btn_small">{{data.type_of_algorithm}}</a></td>
+                        <td>{{data.name}}</td>
+                        <td><a href="{{url_for('summary', type_id = data.type_of_algorithm)}}" class="waves-effect waves-light btn btn_small">{{data.type_of_algorithm}}</a></td>
                         <td>{{data.complexity}}</td>
-                        <td class="center">{{data.learning_method}}</td>
-                        <td class="center">{{data.preprocessing}}</td>
+                        <td class="center">{{data.method}}</td>
+                        <td class="center">{{data.author}}</td>
                         <td class="center">
                             <a href="{{url_for('add_request')}}" class="waves-effect waves-light btn btn_small">ADD</a>
                         </td>

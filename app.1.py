@@ -141,19 +141,18 @@ def update_code(code_id):
     if not 'type_of_algorithm'in request.form:
         return render_template ('bad.html')
     else:
-        the_code.name=request.form['name']
-        the_code.type_of_algorithm=request.form['type_of_algorithm']
-        the_code.complexity=request.form['complexity']
-        the_code.method=request.form['method']
-        the_code.author=request.form['author']
-        if 'inputFile' in request.files:
-            code_file = request.files['inputFile']
-            code_file = code_file.read()
-            the_code.file = code_file
-            db.session.commit()
-            return redirect(url_for("library"))
+        if not 'inputFile' in request.files:
+            code_file = the_code.file
 
         else:    
+            code_file = request.files['inputFile']
+            code_file = code_file.read()
+            the_code.name=request.form['name']
+            the_code.type_of_algorithm=request.form['type_of_algorithm']
+            the_code.complexity=request.form['complexity']
+            the_code.method=request.form['method']
+            the_code.author=request.form['author']
+            the_code.file = code_file
             db.session.commit()
             return redirect(url_for("library"))
     
@@ -168,9 +167,9 @@ def delete_code(code_id):
     
 @app.route('/summary/<type_id>')
 def summary(type_id):
-    if type_id == "regression":
+    if category_id == "regression":
         return render_template('regression.html')
-    elif type_id == "classification": 
+    elif category_id == "classification": 
         return redirect(url_for("classification"))
 
 

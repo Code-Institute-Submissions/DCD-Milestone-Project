@@ -7,7 +7,7 @@
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="model" name="model" type="text" class="validate" value="{{code.model}}">
+                <input id="name" name="name" type="text" class="validate" value="{{code.name}}">
                 <label for="icon_prefix">Model</label>
             </div>
         </div>
@@ -16,11 +16,43 @@
                 <i class="material-icons prefix">poll</i>
                 <select id="type_of_algorithm" name="type_of_algorithm">
                   <option value="" disabled selected>Choose Type</option>
-                  {% for cat in categories %}
-                      {% if cat.type_of_algorithm == code.type_of_algorithm%}
-                      <option value="{{cat.type_of_algorithm}}" selected >{{cat.type_of_algorithm}}</option>
+                  {% for type in types %}
+                      {% if type.type_of_algorithm == code.type_of_algorithm%}
+                      <option value="{{type.type_of_algorithm}}" selected >{{type.type_of_algorithm}}</option>
                       {% else %}
-                       <option value="{{cat.type_of_algorithm}}">{{cat.type_of_algorithm}}</option>
+                       <option value="{{type.type_of_algorithm}}">{{type.type_of_algorithm}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <label>Type of Algorithm</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">poll</i>
+                <select id="complexity" name="complexity">
+                  <option value="" disabled selected>Choose Type</option>
+                  {% for grade in complexities %}
+                      {% if grade.complexity == code.complexity%}
+                      <option value="{{grade.complexity}}" selected >{{grade.complexity}}</option>
+                      {% else %}
+                       <option value="{{grade.complexity}}">{{grade.complexity}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <label>Complexity</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">poll</i>
+                <select id="method" name="method">
+                  <option value="" disabled selected>Choose Type</option>
+                  {% for met in methods %}
+                      {% if met.method == code.method%}
+                      <option value="{{met.method}}" selected >{{met.method}}</option>
+                      {% else %}
+                       <option value="{{met.method}}">{{met.method}}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
@@ -30,22 +62,8 @@
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="complexity" name="complexity" type="text" class="validate" value="{{code.complexity}}">
-                <label for="icon_prefix">complexity</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <i class="material-icons prefix">assignment</i>
-                <input id="learning_method" name="learning_method" type="text" class="validate" value="{{code.learning_method}}">
-                <label for="icon_prefix">learning_method</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <i class="material-icons prefix">assignment</i>
-                <input id="preprocessing" name="preprocessing" type="text" class="validate" value="{{code.preprocessing}}">
-                <label for="icon_prefix">preprocessing</label>
+                <input id="author" name="author" type="text" class="validate" value="{{code.author}}">
+                <label for="icon_prefix">Author</label>
             </div>
         </div>
         <div class="row">

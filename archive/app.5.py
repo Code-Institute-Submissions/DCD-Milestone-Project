@@ -4,11 +4,13 @@ from flask import Flask, render_template, redirect, request, url_for, send_file,
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from flask_sqlalchemy import SQLAlchemy
-import flask_whooshalchemy as wa
 from werkzeug.utils import secure_filename
 from io import BytesIO
 import StringIO
 import base64
+
+
+
 
 ## DATA
 import numpy as np
@@ -18,10 +20,12 @@ import matplotlib.pyplot as plt, mpld3
 import pandas as pd
 import seaborn as sns
 
+
 ## ML
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
+
 
 
 app = Flask(__name__)
@@ -32,52 +36,22 @@ db = SQLAlchemy(app)
 
 
 class CodeRepo(db.Model):
-    __searchable__ = ['name', 'type_of_algorithm','complexity','method','author']
     __tablename__ = 'CodeRepo'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(300))
+    model = db.Column(db.String(300))
     type_of_algorithm = db.Column(db.String(300))
     complexity = db.Column(db.String(300))
-    method = db.Column(db.String(300))
-    author = db.Column(db.String(300))
+    learning_method = db.Column(db.String(300))
+    preprocessing = db.Column(db.String(300))
     file = db.Column(db.LargeBinary)
-    
-    # def __init__(self, id, name, type_of_algorithm, complexity, method, author):
-    #     self.id = id
-    #     self.name = name
-    #     self.type_of_algorithm = type_of_algorithm
-    #     self.complexity = complexity
-    #     self.method = method
-    #     self.author = author
 
-class Types(db.Model):
-    __tablename__ = 'Types'
+class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type_of_algorithm = db.Column(db.String(300))
-    
-    # def __init__(self, id, type_of_algorithm):
-    #     self.id = id
-    #     self.type_of_algorithm = type_of_algorithm
-        
-class Complexities(db.Model):
-    __tablename__ = 'Complexity'
-    id = db.Column(db.Integer, primary_key=True)
-    complexity = db.Column(db.String(300))
-    
-    # def __init__(self, id, complexity):
-    #     self.id = id
-    #     self.complexity = complexity
-        
-class Methods(db.Model):    
-    __tablename__ = 'Methods'
-    id = db.Column(db.Integer, primary_key=True)
-    method = db.Column(db.String(300))
-    
-    # def __init__(self, id, method):
-    #     self.id = id
-    #     self.method = method
-    
-     
+    def __init__(self, id, type_of_algorithm):
+        self.id = id
+        self.type_of_algorithm = type_of_algorithm
+      
       
 @app.route('/')
 @app.route('/library')
@@ -90,23 +64,18 @@ def library():
 @app.route('/download_code/<code_id>', methods=['GET'])
 def download_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    return send_file(BytesIO(the_code.file), attachment_filename='{}.pdf'.format(the_code.name), as_attachment=True)      
+    return send_file(BytesIO(the_code.file), attachment_filename='{}.pdf'.format(the_code.model), as_attachment=True)      
     
     
 @app.route('/add_request')
 def add_request():
-    types = Types.query.all()
-    complexities = Complexities.query.all()
-    methods = Methods.query.all()
-    
-    
-    return render_template ('add_request.html', types = types, complexities = complexities, methods = methods )
+    categories = Categories.query.all()
+    return render_template ('add_request.html', categories = categories)
     
     
 @app.route('/new_code', methods = ['POST'])
 def new_code():
     codes = CodeRepo.query.all()
-    ## fix author
     if not 'inputFile' in request.files:
         return render_template ('bad.html')
     elif not 'type_of_algorithm'in request.form:
@@ -115,11 +84,11 @@ def new_code():
         code_file = request.files['inputFile']
         code_file = code_file.read()
 
-        code = CodeRepo(name=request.form['name'],
+        code = CodeRepo(model=request.form['model'],
                         type_of_algorithm=request.form['type_of_algorithm'],
                         complexity=request.form['complexity'],
-                        method=request.form['method'],
-                        author=request.form['author'],
+                        learning_method=request.form['learning_method'],
+                        preprocessing=request.form['preprocessing'],
                         file = code_file)
         db.session.add(code)
         db.session.commit()
@@ -129,10 +98,8 @@ def new_code():
 @app.route('/edit_code/<code_id>')
 def edit_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    types = Types.query.all()
-    complexities = Complexities.query.all()
-    methods = Methods.query.all()
-    return render_template('edit_code.html', code = the_code, types = types, complexities = complexities, methods = methods)    
+    categories = Categories.query.all()
+    return render_template('edit_code.html', code = the_code, categories = categories)    
     
     
 @app.route('/update_code/<code_id>', methods=["POST"])
@@ -141,19 +108,18 @@ def update_code(code_id):
     if not 'type_of_algorithm'in request.form:
         return render_template ('bad.html')
     else:
-        the_code.name=request.form['name']
-        the_code.type_of_algorithm=request.form['type_of_algorithm']
-        the_code.complexity=request.form['complexity']
-        the_code.method=request.form['method']
-        the_code.author=request.form['author']
-        if 'inputFile' in request.files:
-            code_file = request.files['inputFile']
-            code_file = code_file.read()
-            the_code.file = code_file
-            db.session.commit()
-            return redirect(url_for("library"))
+        if not 'inputFile' in request.files:
+            code_file = the_code.file
 
         else:    
+            code_file = request.files['inputFile']
+            code_file = code_file.read()
+            the_code.model=request.form['model']
+            the_code.type_of_algorithm=request.form['type_of_algorithm']
+            the_code.complexity=request.form['complexity']
+            the_code.learning_method=request.form['learning_method']
+            the_code.preprocessing=request.form['preprocessing']
+            the_code.file = code_file
             db.session.commit()
             return redirect(url_for("library"))
     
@@ -166,11 +132,11 @@ def delete_code(code_id):
     return redirect(url_for("library"))
     
     
-@app.route('/summary/<type_id>')
-def summary(type_id):
-    if type_id == "regression":
+@app.route('/summary/<category_id>')
+def summary(category_id):
+    if category_id == "regression":
         return render_template('regression.html')
-    elif type_id == "classification": 
+    elif category_id == "classification": 
         return redirect(url_for("classification"))
 
 
