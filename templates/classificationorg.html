@@ -44,10 +44,9 @@
                           <h2><option value="" disabled selected>Choose Classifier</option></h2>
                           {% for classifier in classifiers %}
                           <option value={{classifier.name}}>{{classifier.name}}</option>
-                          
+                          {% endfor %}
                         </select>
-                        <a href="{{url_for('classifier', classifier_id=classifier.id)}}" class="waves-effect waves-light btn btn_small">Choose</a>
-                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </div>
         </div>

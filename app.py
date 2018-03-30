@@ -77,7 +77,36 @@ class Methods(db.Model):
     #     self.id = id
     #     self.method = method
     
-     
+class Regression(db.Model):
+    __tablename__ = 'Regression'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300))
+    
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+    
+class Classification(db.Model):
+    __tablename__ = 'Classification'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300))
+    
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+    
+class Clustering(db.Model):
+    __tablename__ = 'Clustering'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300))
+    
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+    
+    
+    
+wa.whoosh_index(app, CodeRepo)     
       
 @app.route('/')
 @app.route('/library')
@@ -85,6 +114,14 @@ def library():
     codes = CodeRepo.query.all()
  
     return render_template("library.html", codes = codes)
+    
+    
+@app.route('/search', methods=['GET'])
+def search():
+    
+    codes = CodeRepo.query.whoosh_search(request.args.get('query')).all()
+    
+    return render_template('library.html', codes = codes)    
     
     
 @app.route('/download_code/<code_id>', methods=['GET'])
@@ -138,24 +175,22 @@ def edit_code(code_id):
 @app.route('/update_code/<code_id>', methods=["POST"])
 def update_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    if not 'type_of_algorithm'in request.form:
-        return render_template ('bad.html')
-    else:
-        the_code.name=request.form['name']
-        the_code.type_of_algorithm=request.form['type_of_algorithm']
-        the_code.complexity=request.form['complexity']
-        the_code.method=request.form['method']
-        the_code.author=request.form['author']
-        if 'inputFile' in request.files:
-            code_file = request.files['inputFile']
-            code_file = code_file.read()
-            the_code.file = code_file
-            db.session.commit()
-            return redirect(url_for("library"))
 
-        else:    
-            db.session.commit()
-            return redirect(url_for("library"))
+    the_code.name=request.form['name']
+    the_code.type_of_algorithm=request.form['type_of_algorithm']
+    the_code.complexity=request.form['complexity']
+    the_code.method=request.form['method']
+    the_code.author=request.form['author']
+    if 'inputFile' in request.files:
+        code_file = request.files['inputFile']
+        code_file = code_file.read()
+        the_code.file = code_file
+        db.session.commit()
+        return redirect(url_for("library"))
+
+    else:    
+        db.session.commit()
+        return redirect(url_for("library"))
     
     
 @app.route('/delete_code/<code_id>')
@@ -168,21 +203,30 @@ def delete_code(code_id):
     
 @app.route('/summary/<type_id>')
 def summary(type_id):
-    if type_id == "regression":
+    if type_id == "Regression":
         return render_template('regression.html')
-    elif type_id == "classification": 
+    elif type_id == "Classification": 
         return redirect(url_for("classification"))
-
-
-
 
 
 
 @app.route('/classification')
 def classification():
+    classifiers = Classification.query.all()
+    ## Dataset Variables
     dataset = pd.read_csv('data.csv')
+    dataset_head = dataset.head()
+    describe = dataset.describe()
+    rows = len(dataset.index)
+    columns = len(dataset.columns)
+  
     X = dataset.iloc[:,1:2].values
     y = dataset.iloc[:, 2].values
+  
+  ## ML
+  
+  
+    
     
     poly_reg = PolynomialFeatures(degree = 4)          
     X_poly = poly_reg.fit_transform(X)                     
@@ -206,7 +250,48 @@ def classification():
     
     pred = lin_reg.predict(poly_reg.fit_transform(6.5))
     
-    return render_template('classification.html', data = X, pred = pred, plot_url=plot_url) 
+    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers) 
+
+
+@app.route('/classifier/<classifier_id>')
+def classifier(classifier_id):
+    classifiers = Classification.query.all()
+    ## Dataset Variables
+    dataset = pd.read_csv('data.csv')
+    dataset_head = dataset.head()
+    describe = dataset.describe()
+    rows = len(dataset.index)
+    columns = len(dataset.columns)
+  
+    X = dataset.iloc[:,1:2].values
+    y = dataset.iloc[:, 2].values
+
+    poly_reg = PolynomialFeatures(degree = 4)          
+    X_poly = poly_reg.fit_transform(X)                     
+    lin_reg = LinearRegression()
+    lin_reg.fit(X_poly, y)
+    
+    img = StringIO.StringIO()
+    sns.set_style("darkgrid")
+    sns.set_context("paper")
+    X_grid = np.arange(min(X), max(X), 0.1)   
+    X_grid = X_grid.reshape(len(X_grid),1)   
+    plt.scatter(X,y, color = 'black')
+    plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'teal')    
+    plt.title('Reality Check (Polynomial Regression)')
+    plt.xlabel('Position Level')
+    plt.ylabel('Salary')
+    # plt.show() 
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    
+    pred = '7'
+    
+    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers)
+    
+    
+
 
 
 

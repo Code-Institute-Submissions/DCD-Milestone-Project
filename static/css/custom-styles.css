@@ -174,7 +174,7 @@ html {
 
 #info_content {
     background-color: #232a27;
-    min-height: 220px;
+    min-height: 120px;
     border-style: outset;
     border-color: #D9B08C;
     border-radius: 25px;
@@ -191,6 +191,7 @@ html {
 #info_content h2 {
     padding: 0px 10px 20px 10px;
     color: #FFCB9A;
+    font-size: 16px;
 }
 
 #info_content h5 {
@@ -543,7 +544,9 @@ form p {
 
 /* NEW  */
 
-
+.select-dropdown {
+    color: white;
+}
 /*#dataTables-example_filter {*/
 /*    display: none;*/
 /*}*/

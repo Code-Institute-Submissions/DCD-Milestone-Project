@@ -40,9 +40,18 @@
                         </td>
                     </tr>
                 </tbody>
-
                 {% endfor%}
             </table>
+
+        </div>
+        <div>
+            <form class="form-inline" method="GET" action="/search">
+                <div class="form-group">
+                    <label for="query">Name</label>
+                    <input type="text" class="form-control" name="query" id="query">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
         </div>
     </div>
 </div>
