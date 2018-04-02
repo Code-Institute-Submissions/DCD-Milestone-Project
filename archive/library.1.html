@@ -14,11 +14,6 @@
                         <th>Complexity</th>
                         <th>Learning Method</th>
                         <th>Author</th>
-                        <th>Add</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                        <th>Download</th>
-                        <th>Downloads</th>
                     </tr>
                 </thead>
                 {% for data in codes%}
@@ -43,7 +38,6 @@
                                 <button type="Download" class="btn btn-default">Download</button>
                             </form>
                         </td>
-                        <td class="center">{{data.downloads}}</td>
                     </tr>
                 </tbody>
                 {% endfor%}

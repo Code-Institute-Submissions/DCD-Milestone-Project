@@ -1,14 +1,18 @@
 ## APP
 import os
 from flask import Flask, render_template, redirect, request, url_for, send_file, session
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
 from flask_sqlalchemy import SQLAlchemy
 import flask_whooshalchemy as wa
-from werkzeug.utils import secure_filename
 from io import BytesIO
 import StringIO
 import base64
+
+## FORMS 
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
+from wtforms import StringField
+from wtforms.validators import InputRequired,  DataRequired
 
 ## DATA
 import numpy as np
@@ -22,13 +26,13 @@ import seaborn as sns
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
+from ml_modules import *
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = 'BiggestSecret'
 db = SQLAlchemy(app)
-
-
 
 
 class CodeRepo(db.Model):
@@ -41,71 +45,44 @@ class CodeRepo(db.Model):
     method = db.Column(db.String(300))
     author = db.Column(db.String(300))
     file = db.Column(db.LargeBinary)
-    
-    # def __init__(self, id, name, type_of_algorithm, complexity, method, author):
-    #     self.id = id
-    #     self.name = name
-    #     self.type_of_algorithm = type_of_algorithm
-    #     self.complexity = complexity
-    #     self.method = method
-    #     self.author = author
+
 
 class Types(db.Model):
     __tablename__ = 'Types'
     id = db.Column(db.Integer, primary_key=True)
     type_of_algorithm = db.Column(db.String(300))
-    
-    # def __init__(self, id, type_of_algorithm):
-    #     self.id = id
-    #     self.type_of_algorithm = type_of_algorithm
-        
+
 class Complexities(db.Model):
     __tablename__ = 'Complexity'
     id = db.Column(db.Integer, primary_key=True)
     complexity = db.Column(db.String(300))
     
-    # def __init__(self, id, complexity):
-    #     self.id = id
-    #     self.complexity = complexity
-        
+
 class Methods(db.Model):    
     __tablename__ = 'Methods'
     id = db.Column(db.Integer, primary_key=True)
     method = db.Column(db.String(300))
     
-    # def __init__(self, id, method):
-    #     self.id = id
-    #     self.method = method
-    
+
+
 class Regression(db.Model):
     __tablename__ = 'Regression'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
     
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-    
+
 class Classification(db.Model):
     __tablename__ = 'Classification'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
     
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-    
+
 class Clustering(db.Model):
     __tablename__ = 'Clustering'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
     
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-    
-    
-    
+   
 wa.whoosh_index(app, CodeRepo)     
       
 @app.route('/')
@@ -137,17 +114,20 @@ def add_request():
     methods = Methods.query.all()
     
     
-    return render_template ('add_request.html', types = types, complexities = complexities, methods = methods )
+    return render_template ('add_request.html', types = types, complexities = complexities, methods = methods)
     
     
 @app.route('/new_code', methods = ['POST'])
 def new_code():
     codes = CodeRepo.query.all()
     ## fix author
-    if not 'inputFile' in request.files:
+    if not 'inputFile' in request.files or not 'name' in request.form:
         return render_template ('bad.html')
-    elif not 'type_of_algorithm'in request.form:
-        return render_template ('bad.html')
+    if not 'type_of_algorithm' in request.form or not 'complexity' in request.form:
+        return render_template ('bad.html')    
+    if not 'method' in request.form or not 'author' in request.form:
+        return render_template ('bad.html')    
+    
     else:    
         code_file = request.files['inputFile']
         code_file = code_file.read()
@@ -175,9 +155,7 @@ def edit_code(code_id):
 @app.route('/update_code/<code_id>', methods=["POST"])
 def update_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    # if not 'name'in request.form or not 'author' in request.form:
-    #     return render_template ('bad.html')
-    # else:
+
     the_code.name=request.form['name']
     the_code.type_of_algorithm=request.form['type_of_algorithm']
     the_code.complexity=request.form['complexity']
@@ -216,43 +194,83 @@ def summary(type_id):
 def classification():
     classifiers = Classification.query.all()
     ## Dataset Variables
-    dataset = pd.read_csv('data.csv')
+   
+    dataset = pd.read_csv('Social_Network_Ads.csv')
     dataset_head = dataset.head()
     describe = dataset.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
-  
-    X = dataset.iloc[:,1:2].values
-    y = dataset.iloc[:, 2].values
-  
-  ## ML
-  
-  
+    X = dataset.iloc[:, [2, 3]].values
+    y = dataset.iloc[:, 4].values  
+    pred = '6.5'
+    
+    return render_template('classification.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, classifiers = classifiers) 
+
+@app.route('/classifier/<classifier_id>')
+def classifier(classifier_id):
+    classifiers = Classification.query.all()
+    # Importing the dataset
+    dataset = pd.read_csv('Social_Network_Ads.csv')
+    dataset_head = dataset.head()
+    stats_data = dataset.iloc[:,2:4]
+    describe = stats_data.describe()
+    rows = len(dataset.index)
+    columns = len(dataset.columns)
+    X = dataset.iloc[:, [2, 3]].values
+    y = dataset.iloc[:, 4].values  
+    
+    # Splitting the dataset into the Training set and Test set
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
+    
+    # Feature Scaling
+    
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+    
+    # Fitting classifier to the Training set
+    
+   
+    classifier = GaussianNB() if classifier_id == '1' else KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p = 2) if classifier_id == '2' else SVC(kernel = 'rbf', random_state = 0 )
+    classifier.fit(X_train, y_train)
+    
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+    
+    # Making the Confusion Matrix
+    from sklearn.metrics import confusion_matrix
+    cm = confusion_matrix(y_test, y_pred)
+    df = pd.DataFrame(cm, index = ['Actual: Yes', 'Actual: No'], columns = ['Predicted: Yes', 'Predicted: No'])
+    accuracy = (df.iloc[0,0] + df.iloc[1,1])
+    accuracy =  "{}%".format(float(accuracy))
     
     
-    poly_reg = PolynomialFeatures(degree = 4)          
-    X_poly = poly_reg.fit_transform(X)                     
-    lin_reg = LinearRegression()
-    lin_reg.fit(X_poly, y)
-    
+    # Visualising the Training set results
+    from matplotlib.colors import ListedColormap
     img = StringIO.StringIO()
-    sns.set_style("darkgrid")
-    sns.set_context("paper")
-    X_grid = np.arange(min(X), max(X), 0.1)   
-    X_grid = X_grid.reshape(len(X_grid),1)   
-    plt.scatter(X,y, color = 'black')
-    plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'teal')    
-    plt.title('Reality Check (Polynomial Regression)')
-    plt.xlabel('Position Level')
-    plt.ylabel('Salary')
-    # plt.show() 
+    X_set, y_set = X_train, y_train
+    X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                         np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+    plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+                 alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+    plt.xlim(X1.min(), X1.max())
+    plt.ylim(X2.min(), X2.max())
+    for i, j in enumerate(np.unique(y_set)):
+        plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                    c = ListedColormap(('red', 'green'))(i), label = j)
+    plt.title('Naive Bayes (Training set)')
+    plt.xlabel('Age')
+    plt.ylabel('Estimated Salary')
+    plt.legend()
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
     
-    pred = lin_reg.predict(poly_reg.fit_transform(6.5))
+    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy)
     
-    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers ) 
+    
+
 
 
 
@@ -260,3 +278,12 @@ if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
             port=int(os.environ.get('PORT')),
             debug=True)    
+            
+# class UploadForm(FlaskForm):
+#     name = StringField('name', validators=[InputRequired()])
+#     type_of_algorithm = StringField('type_of_algorithm', validators=[InputRequired()])
+#     complexity = StringField('complexity', validators=[InputRequired()])
+#     method = StringField('method', validators=[InputRequired()])
+#     author = StringField('author', validators=[InputRequired()])
+#     file = FileField('inputfile', validators=[InputRequired()])            
+  

@@ -1,14 +1,18 @@
 ## APP
 import os
 from flask import Flask, render_template, redirect, request, url_for, send_file, session
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
 from flask_sqlalchemy import SQLAlchemy
 import flask_whooshalchemy as wa
-from werkzeug.utils import secure_filename
 from io import BytesIO
 import StringIO
 import base64
+
+## FORMS 
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
+from wtforms import StringField
+from wtforms.validators import InputRequired,  DataRequired
 
 ## DATA
 import numpy as np
@@ -27,9 +31,8 @@ from ml_modules import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = 'BiggestSecret'
 db = SQLAlchemy(app)
-
-
 
 
 class CodeRepo(db.Model):
@@ -42,6 +45,17 @@ class CodeRepo(db.Model):
     method = db.Column(db.String(300))
     author = db.Column(db.String(300))
     file = db.Column(db.LargeBinary)
+    downloads = db.Column(db.Integer)
+    
+    # def __init__(self, id, name, type_of_algorithm, complexity, method, author, downloads):
+    #     self.id = id
+    #     self.name = name
+    #     self.type_of_algorithm = type_of_algorithm
+    #     self.complexity = complexity
+    #     self.method = method
+    #     self.author = author
+    #     self.downloads = downloads
+        
 
 
 class Types(db.Model):
@@ -61,6 +75,7 @@ class Methods(db.Model):
     method = db.Column(db.String(300))
     
 
+
 class Regression(db.Model):
     __tablename__ = 'Regression'
     id = db.Column(db.Integer, primary_key=True)
@@ -77,8 +92,8 @@ class Clustering(db.Model):
     __tablename__ = 'Clustering'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
-
     
+   
 wa.whoosh_index(app, CodeRepo)     
       
 @app.route('/')
@@ -100,8 +115,11 @@ def search():
 @app.route('/download_code/<code_id>', methods=['GET'])
 def download_code(code_id):
     the_code = CodeRepo.query.filter_by(id = code_id).first()
-    return send_file(BytesIO(the_code.file), attachment_filename='{}.pdf'.format(the_code.name), as_attachment=True)      
+    click = the_code.downloads + 1
+    the_code.downloads = click
+    db.session.commit()
     
+    return send_file(BytesIO(the_code.file), attachment_filename='{}.pdf'.format(the_code.name), as_attachment=True)
     
 @app.route('/add_request')
 def add_request():
@@ -110,17 +128,20 @@ def add_request():
     methods = Methods.query.all()
     
     
-    return render_template ('add_request.html', types = types, complexities = complexities, methods = methods )
+    return render_template ('add_request.html', types = types, complexities = complexities, methods = methods)
     
     
 @app.route('/new_code', methods = ['POST'])
 def new_code():
     codes = CodeRepo.query.all()
     ## fix author
-    if not 'inputFile' in request.files:
+    if not 'inputFile' in request.files or not 'name' in request.form:
         return render_template ('bad.html')
-    elif not 'type_of_algorithm'in request.form:
-        return render_template ('bad.html')
+    if not 'type_of_algorithm' in request.form or not 'complexity' in request.form:
+        return render_template ('bad.html')    
+    if not 'method' in request.form or not 'author' in request.form:
+        return render_template ('bad.html')    
+    
     else:    
         code_file = request.files['inputFile']
         code_file = code_file.read()
@@ -130,7 +151,8 @@ def new_code():
                         complexity=request.form['complexity'],
                         method=request.form['method'],
                         author=request.form['author'],
-                        file = code_file)
+                        file = code_file,
+                        downloads = 0)
         db.session.add(code)
         db.session.commit()
         return redirect(url_for("library"))
@@ -177,7 +199,7 @@ def delete_code(code_id):
 @app.route('/summary/<type_id>')
 def summary(type_id):
     if type_id == "Regression":
-        return render_template('regression.html')
+        return redirect(url_for("regression"))
     elif type_id == "Classification": 
         return redirect(url_for("classification"))
 
@@ -190,7 +212,8 @@ def classification():
    
     dataset = pd.read_csv('Social_Network_Ads.csv')
     dataset_head = dataset.head()
-    describe = dataset.describe()
+    stats_data = dataset.iloc[:,2:4]
+    describe = stats_data.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
     X = dataset.iloc[:, [2, 3]].values
@@ -262,6 +285,55 @@ def classifier(classifier_id):
     
     return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy)
     
+
+@app.route('/regression')
+def regression():
+    regressors = Regression.query.all()
+    dataset = pd.read_csv('Position_Salaries.csv')
+    X = dataset.iloc[:, 1:2].values
+    y = dataset.iloc[:, 2:3].values
+    dataset_head = dataset.head()
+    describe = dataset.describe()
+    rows = len(dataset.index)
+    columns = len(dataset.columns)
+    pred = '6.5'
+    
+    return render_template('regression.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, regressors = regressors)
+    
+@app.route('/regressor/<regressor_id>')
+def regressor(regressor_id):
+    regressors = Regression.query.all() 
+    dataset = pd.read_csv('Position_Salaries.csv')
+    X = dataset.iloc[:, 1:2].values
+    y = dataset.iloc[:, 2:3].values
+    dataset_head = dataset.head()
+    describe = dataset.describe()
+    rows = len(dataset.index)
+    columns = len(dataset.columns)
+    pred = '6.5'
+    
+    poly_reg = PolynomialFeatures(degree = 4)          
+    X_poly = poly_reg.fit_transform(X)                     
+    lin_reg = LinearRegression()
+    lin_reg.fit(X_poly, y)
+    
+    img = StringIO.StringIO()
+    X_grid = np.arange(min(X), max(X), 0.1)   
+    X_grid = X_grid.reshape(len(X_grid),1)         
+    plt.scatter(X,y, color = 'red')
+    plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'blue')    
+    plt.title('Reality Check (Polynomial Regression)')
+    plt.xlabel('Position Level')
+    plt.ylabel('Salary')
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    
+    pred = lin_reg.predict(poly_reg.fit_transform(6.5))
+    
+    
+    return render_template('regression.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, regressors = regressors)
+    
     
 
 
@@ -272,5 +344,5 @@ if __name__ == '__main__':
             port=int(os.environ.get('PORT')),
             debug=True)    
             
-            
   
+# <a href="{{url_for('regressor', regressor_id=regressor.id)}}" class="waves-effect waves-light btn btn_small">Choose</a>

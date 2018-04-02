@@ -1,27 +1,24 @@
 {% extends 'base.html' %} {% block content %}
 
 
-<h3>Edit Dataset</h3>
+<h3>Add Code</h3>
 <div class="row">
-    <form action="{{url_for('update_code', code_id=code.id) }}" method="POST"  enctype="multipart/form-data" class="col s12">
+    <form action="{{url_for('new_code') }}" method="POST" enctype="multipart/form-data" class="col s12">
+
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="name" name="name" type="text" class="validate" value="{{code.name}}">
-                <label for="icon_prefix">Model</label>
+                <input id="name" name="name" type="text">
+                <label for="icon_prefix">Name</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">poll</i>
                 <select id="type_of_algorithm" name="type_of_algorithm">
-                  <option value="" disabled selected>Choose Type</option>
+                  <option value="" disabled selected>Choose type</option>
                   {% for type in types %}
-                      {% if type.type_of_algorithm == code.type_of_algorithm%}
-                      <option value="{{type.type_of_algorithm}}" selected >{{type.type_of_algorithm}}</option>
-                      {% else %}
-                       <option value="{{type.type_of_algorithm}}">{{type.type_of_algorithm}}</option>
-                    {% endif %}
+                      <option value={{type.type_of_algorithm}}>{{type.type_of_algorithm}}</option>
                   {% endfor %}
                 </select>
                 <label>Type of Algorithm</label>
@@ -31,13 +28,9 @@
             <div class="input-field col s12">
                 <i class="material-icons prefix">poll</i>
                 <select id="complexity" name="complexity">
-                  <option value="" disabled selected>Choose Type</option>
+                  <option value="" disabled selected>Choose type</option>
                   {% for grade in complexities %}
-                      {% if grade.complexity == code.complexity%}
-                      <option value="{{grade.complexity}}" selected >{{grade.complexity}}</option>
-                      {% else %}
-                       <option value="{{grade.complexity}}">{{grade.complexity}}</option>
-                    {% endif %}
+                      <option value={{grade.complexity}}>{{grade.complexity}}</option>
                   {% endfor %}
                 </select>
                 <label>Complexity</label>
@@ -47,13 +40,9 @@
             <div class="input-field col s12">
                 <i class="material-icons prefix">poll</i>
                 <select id="method" name="method">
-                  <option value="" disabled selected>Choose Type</option>
+                  <option value="" disabled selected>Choose type</option>
                   {% for met in methods %}
-                      {% if met.method == code.method%}
-                      <option value="{{code.method}}" selected >{{met.method}}</option>
-                      {% else %}
-                       <option value="{{met.method}}">{{met.method}}</option>
-                    {% endif %}
+                      <option value={{met.method}}>{{met.method}}</option>
                   {% endfor %}
                 </select>
                 <label>Learning Method</label>
@@ -62,8 +51,8 @@
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="author" name="author" type="text" class="validate" value="{{code.author}}">
-                <label for="icon_prefix">Author</label>
+                <input id="author" name="author" type="text">
+                <label for="icon_prefix">author</label>
             </div>
         </div>
         <div class="row">
@@ -79,8 +68,6 @@
         </div>
     </form>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
 {% endblock %}
