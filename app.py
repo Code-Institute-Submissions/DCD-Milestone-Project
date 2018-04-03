@@ -93,6 +93,31 @@ class Clustering(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(300))
     
+    
+Assembler = db.Table('Assembler',
+    db.Column('algotype_id', db.Integer, db.ForeignKey('AlgoTypes.algotype_id')),
+    db.Column('preprocess_id', db.Integer, db.ForeignKey('Preprocessing.preprocess_id')),
+    db.Column('issue_id', db.Integer, db.ForeignKey('RedFlags.issue_id'))
+)       
+
+class AlgoTypes(db.Model):
+    __tablename__ = 'AlgoTypes'
+    algotype_id = db.Column(db.Integer, primary_key=True)
+    algo_type = db.Column(db.String(300))
+    preprocessers = db.relationship('Preprocessing', secondary=Assembler, backref=db.backref('algos', lazy = 'dynamic'))
+    issues = db.relationship('RedFlags', secondary=Assembler, backref=db.backref('algos', lazy = 'dynamic'))
+    
+    
+class Preprocessing(db.Model):
+    __tablename__ = 'Preprocessing'
+    preprocess_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300))    
+    
+class RedFlags(db.Model):
+    __tablename__ = 'RedFlags'
+    issue_id = db.Column(db.Integer, primary_key=True)
+    issue = db.Column(db.String(300))         
+    
    
 wa.whoosh_index(app, CodeRepo)     
       
@@ -170,6 +195,8 @@ def update_code(code_id):
     the_code.complexity=request.form['complexity']
     the_code.method=request.form['method']
     the_code.author=request.form['author']
+    if request.form['name'] == '' or request.form['author'] == '':
+        return render_template ('bad.html')
     if 'inputFile' in request.files:
         code_file = request.files['inputFile']
         code_file = code_file.read()
@@ -202,6 +229,7 @@ def summary(type_id):
 @app.route('/classification')
 def classification():
     classifiers = Classification.query.all()
+    algo = AlgoTypes.query.filter_by(algotype_id = 2).first()
     ## Dataset Variables
    
     dataset = pd.read_csv('Social_Network_Ads.csv')
@@ -214,11 +242,12 @@ def classification():
     y = dataset.iloc[:, 4].values  
     pred = '6.5'
     
-    return render_template('classification.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, classifiers = classifiers) 
+    return render_template('classification.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, classifiers = classifiers, algo = algo) 
 
 @app.route('/classifier/<classifier_id>')
 def classifier(classifier_id):
     classifiers = Classification.query.all()
+    
     # Importing the dataset
     dataset = pd.read_csv('Social_Network_Ads.csv')
     dataset_head = dataset.head()
