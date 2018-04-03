@@ -530,7 +530,8 @@ form p {
 }
 
 .table-responsive {
-    background-color: grey;
+    background-color: #C0C0C0;
+ 
 }
 
 .card-content {
@@ -550,3 +551,4 @@ form p {
 /*#dataTables-example_filter {*/
 /*    display: none;*/
 /*}*/
+

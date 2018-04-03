@@ -259,7 +259,6 @@ def classifier(classifier_id):
     # Visualising the Training set results
     from matplotlib.colors import ListedColormap
     img = StringIO.StringIO()
-    plt.gcf().clear()
     X_set, y_set = X_train, y_train
     X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                          np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
@@ -277,7 +276,6 @@ def classifier(classifier_id):
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
-    plt.gcf().clear()
     
     return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy)
     
@@ -307,74 +305,30 @@ def regressor(regressor_id):
     rows = len(dataset.index)
     columns = len(dataset.columns)
     pred = '6.5'
-    choice = regressor_id
     
-    if choice == '1':
-        poly_reg = PolynomialFeatures(degree = 4)          
-        X_poly = poly_reg.fit_transform(X)                     
-        lin_reg = LinearRegression()
-        lin_reg.fit(X_poly, y)
-        
-        img = StringIO.StringIO()
-        plt.gcf().clear()
-        X_grid = np.arange(min(X), max(X), 0.1)   
-        X_grid = X_grid.reshape(len(X_grid),1)         
-        plt.scatter(X,y, color = 'red')
-        plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'blue')    
-        plt.title('Reality Check (Polynomial Regression)')
-        plt.xlabel('Position Level')
-        plt.ylabel('Salary')
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue())
-        plt.gcf().clear()
-        
-        pred = lin_reg.predict(poly_reg.fit_transform(6.5))
-        
-    elif choice == '2':
-        sc_X = StandardScaler()
-        X = sc_X.fit_transform(X)
-        sc_y = StandardScaler()
-        y = sc_y.fit_transform(y)
-        
-        regressor = SVR(kernel = 'rbf')
-        regressor.fit(X,y)
-        
-        img2 = StringIO.StringIO()
-        X_grid = np.arange(min(X), max(X), 0.1)
-        X_grid = X_grid.reshape((len(X_grid), 1))
-        plt.scatter(X, y, color = 'red')
-        plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-        plt.title('Truth or Bluff (Regression Model)')
-        plt.xlabel('Position level')
-        plt.ylabel('Salary')
-        plt.savefig(img2, format='png')
-        img2.seek(0)
-        plot_url = base64.b64encode(img2.getvalue())
-        plt.gcf().clear()
-        
-        pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))
-        
-    else: 
-        regressor = RandomForestRegressor(n_estimators = 600, random_state = 0)
-        regressor.fit(X,y)
-        
-        img = StringIO.StringIO()
-        X_grid = np.arange(min(X), max(X), 0.01)
-        X_grid = X_grid.reshape((len(X_grid), 1))
-        plt.scatter(X, y, color = 'red')
-        plt.grid()
-        plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-        plt.title('Reality Check (Random Forest Regression Model)')
-        plt.xlabel('Position level')
-        plt.ylabel('Salary')
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue())
-        plt.gcf().clear()
-        pred = regressor.predict(6.5)
-        
+    poly_reg = PolynomialFeatures(degree = 4)          
+    X_poly = poly_reg.fit_transform(X)                     
+    lin_reg = LinearRegression()
+    lin_reg.fit(X_poly, y)
+    
+    img = StringIO.StringIO()
+    X_grid = np.arange(min(X), max(X), 0.1)   
+    X_grid = X_grid.reshape(len(X_grid),1)         
+    plt.scatter(X,y, color = 'red')
+    plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'blue')    
+    plt.title('Reality Check (Polynomial Regression)')
+    plt.xlabel('Position Level')
+    plt.ylabel('Salary')
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    
+    pred = lin_reg.predict(poly_reg.fit_transform(6.5))
+    
+    
     return render_template('regression.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, regressors = regressors)
+    
+    
 
 
 

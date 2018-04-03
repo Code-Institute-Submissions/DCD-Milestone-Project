@@ -25,6 +25,7 @@
 </head>
 
 
+
 <body>
     <!-- WRAPPER -->
     <div id="wrapper">
@@ -53,81 +54,34 @@
             <!-- PAGE-INDEX -->
             <div id="page-index">
                 <div class="dashboard-cards">
-                    <div class="card">
-                        <div class="card-action">
-                            Available Codes
-                        </div>
-                        <div class="card-content">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Model Name</th>
-                                            <th>Type of Estimator</th>
-                                            <th>Complexity</th>
-                                            <th>Learning Method</th>
-                                            <th>Author</th>
-                                            <th>Add</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
-                                            <th>Download</th>
-                                            <th>Downloads</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for data in codes%}
-                                        <tr class="odd gradeA">
-                                            <td>{{data.name}}</td>
-                                            <td><a href="{{url_for('summary', type_id = data.type_of_algorithm)}}" class="waves-effect waves-light btn btn_small">{{data.type_of_algorithm}}</a></td>
-                                            <td>{{data.complexity}}</td>
-                                            <td class="center">{{data.method}}</td>
-                                            <td class="center">{{data.author}}</td>
-                                            <td class="center">
-                                                <a href="{{url_for('add_request')}}" class="waves-effect waves-light btn btn_small">ADD</a>
-                                            </td>
-                                            <td class="center">
-                                                <a href="{{url_for('edit_code', code_id=data.id)}}" class="waves-effect waves-light btn btn_small">Edit</a>
-                                            </td>
-                                            <td class="center">
-                                                <a href="{{url_for('delete_code', code_id=data.id)}}" class="waves-effect waves-light btn btn_small">Delete</a>
-                                            </td>
-                                            <td class="center">
-                                                <form action="{{url_for('download_code', code_id=data.id) }}" method="GET" enctype="multipart/form-data">
-                                                    <button type="Download" class="btn btn-default">Download</button>
-                                                </form>
-                                            </td>
-                                            <td class="center">{{data.downloads}}</td>
-                                        </tr>
-
-                                        {% endfor%}
-                                    </tbody>
-                                </table>
+                    {% block content %} {% endblock %}
 
 
 
-                                <!-- PAGE-INDEX -->
-                            </div>
-                        </div>
-                    </div>
+
+
                 </div>
+
             </div>
+            <!-- PAGE-INDEX -->
+
         </div>
         <!-- PAGE-WRAPPER -->
 
     </div>
     <!-- WRAPPER -->
+
     <!-- jQuery Js -->
     <script src="{{url_for('static', filename='js/jquery-1.10.2.js')}}"></script>
-
     <!-- Bootstrap Js -->
     <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
 
     <!-- Materialize Js -->
     <script src="{{url_for('static', filename='materialize/js/materialize.min.js')}}"></script>
-
     <!-- Metis Menu Js -->
     <script src="{{url_for('static', filename='js/jquery.metisMenu.js')}}"></script>
 
+    <!-- DATA TABLE SCRIPTS -->
     <script src="{{url_for('static', filename='js/dataTables/jquery.dataTables.js')}}"></script>
     <script src="{{url_for('static', filename='js/dataTables/dataTables.bootstrap.js')}}"></script>
     <script>
@@ -135,18 +89,22 @@
             $('#dataTables-example').dataTable();
         });
     </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.collapsible').collapsible();
+            $('select').material_select();
+            $(".button-collapse").sideNav();
+        });
+    </script>
     <!-- Custom Js -->
     <script src="{{url_for('static', filename='js/custom-scripts.js')}}"></script>
-
     <!-- Morris Chart Js -->
     <script src="{{url_for('static', filename='js/morris/raphael-2.1.0.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/morris/morris.js')}}"></script>
-
-
     <script src="{{url_for('static', filename='js/easypiechart.js')}}"></script>
     <script src="{{url_for('static', filename='js/easypiechart-data.js')}}"></script>
-
     <script src="{{url_for('static', filename='js/Lightweight-Chart/jquery.chart.js')}}"></script>
 
 </body>
