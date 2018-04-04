@@ -223,8 +223,6 @@ def summary(type_id):
         return redirect(url_for("regression"))
     elif type_id == "Classification": 
         return redirect(url_for("classification"))
-    else:
-        return redirect(url_for("clustering"))
 
 
 
@@ -259,7 +257,6 @@ def classifier(classifier_id):
     columns = len(dataset.columns)
     X = dataset.iloc[:, [2, 3]].values
     y = dataset.iloc[:, 4].values  
-    plt.gcf().clear()
     
     # Splitting the dataset into the Training set and Test set
     
@@ -291,7 +288,7 @@ def classifier(classifier_id):
     # Visualising the Training set results
     from matplotlib.colors import ListedColormap
     img = StringIO.StringIO()
-    
+    plt.gcf().clear()
     X_set, y_set = X_train, y_train
     X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                          np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
@@ -341,7 +338,6 @@ def regressor(regressor_id):
     columns = len(dataset.columns)
     pred = '6.5'
     choice = regressor_id
-    plt.gcf().clear()
     
     if choice == '1':
         poly_reg = PolynomialFeatures(degree = 4)          
@@ -374,7 +370,7 @@ def regressor(regressor_id):
         regressor = SVR(kernel = 'rbf')
         regressor.fit(X,y)
         
-        img = StringIO.StringIO()
+        img2 = StringIO.StringIO()
         X_grid = np.arange(min(X), max(X), 0.1)
         X_grid = X_grid.reshape((len(X_grid), 1))
         plt.scatter(X, y, color = 'red')
@@ -382,9 +378,9 @@ def regressor(regressor_id):
         plt.title('Truth or Bluff (Regression Model)')
         plt.xlabel('Position level')
         plt.ylabel('Salary')
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue())
+        plt.savefig(img2, format='png')
+        img2.seek(0)
+        plot_url = base64.b64encode(img2.getvalue())
         plt.gcf().clear()
         
         pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))
@@ -411,124 +407,7 @@ def regressor(regressor_id):
     return render_template('regression.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, regressors = regressors)
 
 
-@app.route('/clustering')
-def clustering():
-    clusterers = Clustering.query.all()
-    algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
-    dataset = pd.read_csv('Mall_Customers.csv')
-    X = dataset.iloc[:, [3, 4]].values
-    dataset_head = dataset.head()
-    stats_data = dataset.iloc[:,2:5]
-    describe = stats_data.describe()
-    rows = len(dataset.index)
-    columns = len(dataset.columns)
-    pred = '6.5'
-    
-    return render_template('clustering.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, clusterers = clusterers, algo = algo)
-    
-@app.route('/clusterer/<clusterer_id>')
-def clusterer(clusterer_id):
-    clusterers = Clustering.query.all()
-    algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
-    dataset = pd.read_csv('Mall_Customers.csv')
-    X = dataset.iloc[:, [3, 4]].values
-    dataset_head = dataset.head()
-    stats_data = dataset.iloc[:,2:5]
-    describe = stats_data.describe()
-    rows = len(dataset.index)
-    columns = len(dataset.columns)
-    pred = '6.5'
-    
-    choice = clusterer_id
-    
-    if choice == '1':
-        
-        plt.gcf().clear()
-        dendrogram = sch.dendrogram(sch.linkage(X,method = 'ward'))
-        img_dendrogram = StringIO.StringIO()
-        plt.title("Dendrogram")
-        plt.xlabel('Customers')
-        plt.ylabel('Euclidean distances')
-        plt.savefig(img_dendrogram, format='png')
-        img_dendrogram.seek(0)
-        plot_determine = base64.b64encode(img_dendrogram.getvalue())
-        
-        
-        
-        hc = AgglomerativeClustering(n_clusters = 5, affinity = 'euclidean', linkage = 'ward')
-        y_hc = hc.fit_predict(X)
-        
-        img = StringIO.StringIO()
-        plt.gcf().clear()
-        plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
-            s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
-        plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1],s = 100, c = 'blue',label = 'Standard') 
-        plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1],s = 100, c = 'green',label = 'Target') 
-        plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
-        plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
-        plt.title('Clusters of clients')
-        plt.xlabel('Annual income (k$)')
-        plt.ylabel('Spending Score (1-100)')
-        plt.legend()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue())
-        
-    if choice == '2':    
-        
-        wcss = []    ## initialize the list
-        for i in range(1, 11):
-            kmeans = KMeans(n_clusters = i,        ## from 1 to 10
-                            init = 'k-means++',    ## k-means++ to avoid random initialziation trap
-                            max_iter = 300,        ## 300 is deafault        
-                            n_init  = 10,          ## algorithm runs with different initial centroids      
-                            random_state = 0)
-            kmeans.fit(X)
-            wcss.append(kmeans.inertia_)           ## to compute wcss   
-        
-        plt.gcf().clear()
-        img_elbow = StringIO.StringIO()
-        plt.plot(range(1,11), wcss)
-        plt.title('The Elbow Method')
-        plt.xlabel('Number of clusters')
-        plt.ylabel('WCSS')
-        plt.savefig(img_elbow, format='png')
-        img_elbow.seek(0)
-        plot_determine = base64.b64encode(img_elbow.getvalue())
-        
-        
-        
-        ## Applying k-means to the mall dataset - from the plot we can see that optimum is 5 clusters.
-        kmeans = KMeans(n_clusters = 5,
-                        init = 'k-means++',    ## k-means++ to avoid random initialziation trap
-                        max_iter = 300,        ## 300 is deafault        
-                        n_init  = 10,          ## algorithm runs with different initial centroids      
-                        random_state = 0)
-        y_kmeans = kmeans.fit_predict(X)       ## fit_predict returns a cluster for each observation 
-        
-        ## Visualising the clusters
-        img = StringIO.StringIO()
-        plt.gcf().clear()
-        plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
-                    s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
-        plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1],s = 100, c = 'blue',label = 'Standard') 
-        plt.scatter(X[y_kmeans == 2, 0], X[y_kmeans == 2, 1],s = 100, c = 'green',label = 'Target') 
-        plt.scatter(X[y_kmeans == 3, 0], X[y_kmeans == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
-        plt.scatter(X[y_kmeans == 4, 0], X[y_kmeans == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
-        plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],         ## cluster centers coordinates
-                    s = 300, c = 'yellow', label = 'Centroids')
-        plt.title('Clusters of clients')
-        plt.xlabel('Annual income (k$)')
-        plt.ylabel('Spending Score (1-100)')
-        plt.legend()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue())
-        
-        
-    
-    return render_template('clustering.html', data = dataset_head.to_html(), describe = describe.to_html(), plot_determine = plot_determine, plot_url=plot_url, rows = rows, columns = columns, clusterers = clusterers, algo = algo)
-    
+
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
@@ -536,3 +415,4 @@ if __name__ == '__main__':
             debug=True)    
             
   
+# <a href="{{url_for('regressor', regressor_id=regressor.id)}}" class="waves-effect waves-light btn btn_small">Choose</a>

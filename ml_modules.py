@@ -21,77 +21,85 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 
+import scipy.cluster.hierarchy as sch
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import KMeans
 
 
-## POLYNOMIAL 
 
-dataset = pd.read_csv('Position_Salaries.csv')
-X = dataset.iloc[:,1:2].values
-y = dataset.iloc[:, 2].values
+## Hierarchical Clustering
 
-poly_reg = PolynomialFeatures(degree = 4)          
-X_poly = poly_reg.fit_transform(X)                     
-lin_reg = LinearRegression()
-lin_reg.fit(X_poly, y)
-
-X_grid = np.arange(min(X), max(X), 0.1)   
-X_grid = X_grid.reshape(len(X_grid),1)         
-plt.scatter(X,y, color = 'red')
-plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'blue')    
-plt.title('Reality Check (Polynomial Regression)')
-plt.xlabel('Position Level')
-plt.ylabel('Salary')
-plt.show() 
-
-lin_reg.predict(poly_reg.fit_transform(6.5))
+dataset = pd.read_csv('Mall_Customers.csv')
+X = dataset.iloc[:, [3, 4]].values  ## age & annual income
 
 
-### Support Vector Machine
 
-dataset = pd.read_csv("Position_Salaries.csv")
-X = dataset.iloc[:,1:2].values
-y = dataset.iloc[:,2:3].values
-
-
-sc_X = StandardScaler()
-X = sc_X.fit_transform(X)
-sc_y = StandardScaler()
-y = sc_y.fit_transform(y)
-
-
-regressor = SVR(kernel = 'rbf')
-regressor.fit(X,y)
-
-X_grid = np.arange(min(X), max(X), 0.1)
-X_grid = X_grid.reshape((len(X_grid), 1))
-plt.scatter(X, y, color = 'red')
-plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-plt.title('Truth or Bluff (Regression Model)')
-plt.xlabel('Position level')
-plt.ylabel('Salary')
+dendrogram = sch.dendrogram(sch.linkage(X,method = 'ward'))       
+plt.title("Dendrogram")
+plt.xlabel('Customers')
+plt.ylabel('Euclidean distances')
 plt.show()
 
-y_pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))
+hc = AgglomerativeClustering(n_clusters = 5, affinity = 'euclidean', linkage = 'ward')
+y_hc = hc.fit_predict(X)
 
 
-### Random Forest Regression
+plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
+            s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
+plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1],s = 100, c = 'blue',label = 'Standard') 
+plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1],s = 100, c = 'green',label = 'Target') 
+plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
+plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
+plt.title('Clusters of clients')
+plt.xlabel('Annual income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.legend()
+plt.show()
 
-dataset = pd.read_csv('Position_Salaries.csv')
-X = dataset.iloc[:, 1:2].values
-y = dataset.iloc[:, 2].values
+
+## K-Means Clustering 
 
 
-regressor = RandomForestRegressor(n_estimators = 600, random_state = 0)
-regressor.fit(X,y)
+dataset = pd.read_csv('Mall_Customers.csv')
+X = dataset.iloc[:, [3, 4]].values
 
-y_pred = regressor.predict(6.5)
 
-X_grid = np.arange(min(X), max(X), 0.01)
-X_grid = X_grid.reshape((len(X_grid), 1))
-plt.scatter(X, y, color = 'red')
-plt.grid()
-plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-plt.title('Reality Check (Random Forest Regression Model)')
-plt.xlabel('Position level')
-plt.ylabel('Salary')
+wcss = []    ## initialize the list
+for i in range(1, 11):
+        kmeans = KMeans(n_clusters = i,        ## from 1 to 10
+                        init = 'k-means++',    ## k-means++ to avoid random initialziation trap
+                        max_iter = 300,        ## 300 is deafault        
+                        n_init  = 10,          ## algorithm runs with different initial centroids      
+                        random_state = 0)
+        kmeans.fit(X)
+        wcss.append(kmeans.inertia_)           ## to compute wcss   
+
+
+plt.plot(range(1,11), wcss)
+plt.title('The Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')
+plt.show()
+
+## Applying k-means to the mall dataset - from the plot we can see that optimum is 5 clusters.
+kmeans = KMeans(n_clusters = 5,
+                init = 'k-means++',    ## k-means++ to avoid random initialziation trap
+                max_iter = 300,        ## 300 is deafault        
+                n_init  = 10,          ## algorithm runs with different initial centroids      
+                random_state = 0)
+y_kmeans = kmeans.fit_predict(X)       ## fit_predict returns a cluster for each observation 
+
+## Visualising the clusters
+plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
+            s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
+plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1],s = 100, c = 'blue',label = 'Standard') 
+plt.scatter(X[y_kmeans == 2, 0], X[y_kmeans == 2, 1],s = 100, c = 'green',label = 'Target') 
+plt.scatter(X[y_kmeans == 3, 0], X[y_kmeans == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
+plt.scatter(X[y_kmeans == 4, 0], X[y_kmeans == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
+plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],         ## cluster centers coordinates
+            s = 300, c = 'yellow', label = 'Centroids')
+plt.title('Clusters of clients')
+plt.xlabel('Annual income (k$)')
+plt.ylabel('Spending Score (1-100)')
+plt.legend()
 plt.show()
