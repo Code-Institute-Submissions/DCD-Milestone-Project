@@ -4,10 +4,10 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: #062324;
+    background: #090f19;
     position: relative;
     margin: 0;
-    padding-top: 110px;
+    padding-bottom: 0;
     min-height: 100%;
 }
 
@@ -16,16 +16,60 @@ html {
     box-sizing: border-box;
 }
 
+#menu_row {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
 
 #wrapper {
     width: 100%;
 }
 
+#page-wrapper {
+    background: #062324;
+    position: relative;
+    top: 55px;
+    -moz-box-shadow: 0 0 10px #757575;
+    background-image: url('../../static/img/img7.jpg');
+    
+}
+
 #page-index {
     width: 100%;
     margin: 10px 20px 10px 0px;
-    padding: 15px 130px 130px 130px;
-    background-size: cover;
+    padding: 15px 30px;
+    
+}
+
+#page-index a {
+    text-decoration: none;
+    outline: 0;
+    font-size: 10px;
+}
+
+#page-selection {
+    width: 100%;
+    margin: 10px 20px 10px 0px;
+    padding: 15px 30px;
+    background-image: url('../../assets/img/backg.png');
+    background-size: cover
+}
+
+#page-algorithm {
+    width: 100%;
+    margin: 10px 20px 10px 0px;
+    padding: 15px 30px;
+    min-height: 1200px;
+    background-image: url('../../assets/img/backg.png');
+    background-size: cover
+}
+
+#page-projects {
+    width: 100%;
+    margin: 10px 20px 10px 0px;
+    padding: 15px 30px;
+    background-image: url('../../assets/img/backg.png');
+    background-size: cover
 }
 
 
@@ -35,22 +79,23 @@ html {
 
 .btn {
     color: white;
-    background-color: #008080;
-    border-radius: 20px;
+    background-color: #2b4056;
+    border-radius: 5px;
     border: none;
-    width: 120px;
+    width: 100px;
     display: block;
     margin: 0 auto;
-    margin-top: 10px;
-    line-height: 20px;
     font-weight: bold;
+    line-height: 25px;
     font-size: 10px;
 }
 
 .btn:hover {
-    background-color: #0E5254;
-    color: white;
+    background-color: white;
+    color: #2b4056;
 }
+
+
 
 /*------------------------------------------------------------------------------
     TOP NAVBAR    
@@ -61,8 +106,8 @@ html {
     top: 0px;
     width: 100%;
     z-index: 300;
-    background: #232a27;
-    border: none;
+    background: #1a2026;
+    border-bottom: none;
     padding-right: 10px;
 }
 
@@ -85,8 +130,8 @@ html {
     font-weight: 700;
     /* text-transform: uppercase; */
     line-height: 30px;
-    background: #232a27;
-    border-radius: 10px;
+    background: #1a2026;
+    border-radius: 15px;
 }
 
 .top-navbar .nav>li {
@@ -94,7 +139,7 @@ html {
     display: inline-block;
     margin: 0px;
     padding: 0px;
-    border-radius: 10px;
+    border-radius: 15px;
 }
 
 .top-navbar .nav>li>a {
@@ -105,7 +150,7 @@ html {
     margin: 0px;
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
-    border-radius: 10px;
+    border-radius: 15px;
 }
 
 .top-navbar .nav>li>a>i {
@@ -126,20 +171,38 @@ html {
     color: #FFCB9A;
 }
 
+.top-navbar .dropdown-menu {
+    min-width: 230px;
+    border-radius: 0 0 4px 4px;
+    border: 0;
+}
 
+.dropdown-content {
+    min-width: 165px !important;
+    left: -38px !important;
+    top: 60px !important;
+    background-color: #062324;
+}
 
-.fa-th-list,
-.fa-python,
-.fa-file,
-.material-icons {
-    color: #FFCB9A;
-    margin-right: 2px;
+.dropdown-content li>a {
+    font-size: 14px;
+    text-decoration: none;
+    color: white;
 
+}
+
+.dropdown-content li>a i {
+    font-size: 16px;
 }
 
 /* Hovers and Focuses --------------------------------------------------------*/
 
-
+.top-navbar .nav>li>a:hover,
+.top-navbar .nav>li>a:focus {
+    text-decoration: none;
+    background-color: #e0e8f5;
+    color: #fff;
+}
 
 .nav .open>a,
 .nav .open>a:hover,
@@ -152,9 +215,15 @@ html {
 .top-navbar .nav>li>a:hover,
 .top-navbar .nav>li>a:focus {
     text-decoration: none;
-    background: #0E5254;
+    background: #2a333c;
     outline: 0px;
 
+}
+
+.top-navbar .dropdown-menu>li>a:hover,
+.top-navbar .dropdown-menu>li>a:focus {
+    color: #225081;
+    background: none;
 }
 
 .navbar-default .navbar-brand:hover {
@@ -162,91 +231,136 @@ html {
 }
 
 .top-navbar .navbar-brand:hover {
-    background-color: #0E5254;
+    background-color: #2a333c;
     outline: 0px;
 }
 
-
-
 /*------------------------------------------------------------------------------
-    DASHBOARD CARDS    
+    SIDE NAVBAR    
 ------------------------------------------------------------------------------*/
 
-#info_content {
-    background-color: #232a27;
-    min-height: 120px;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 25px;
-    margin: 10px;
-    padding: 30px;
+.navbar-side {
+    z-index: 2;
+    position: fixed;
+    width: 260px;
+    border: none;
+    background: #232a27;
+    box-shadow: none;
+    top: 64px;
 }
 
-#info_content h1  {
-    padding: 0px 10px 20px 0px;
-    color: white;
-}
-
-
-#info_content h2 {
-    padding: 0px 10px 20px 10px;
-    color: #FFCB9A;
-    font-size: 16px;
-}
-
-#info_content h5 {
-    padding: 40px 10px 0px 10px;
-    color: white;
-}
-
-#info_content a {
-    text-decoration: none;
-}
-
-#info_content h5:hover {
-    padding: 40px 10px 0px 10px;
-    color: #0E5254;
-}
-
-[type="radio"]:not(:checked),
-[type="radio"]:checked {
-    opacity: 1;
-    position: static;
-    margin-left: 10px;
-}
-
-label {
-    color: white;
-    font-size: 18px;
-    border-radius: 10px;
-    padding-right: 10px;
-
-}
-
-label:hover {
-    background-color: #151917;
-}
-
-form p {
+.navbar-side .nav>li>a>i {
     color: #D9B08C;
-    font-size: 20px;
-    font-weight: bold;
+    padding: 8px;
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
 }
 
-#estimator {
-    background-color: #0E5254;
-    height: 80px;
-    color: white;
-    border-radius: 15px;
+.nav>li>a {
+    padding-left: 35px;
+}
+
+.sidebar-collapse,
+.sidebar-collapse .nav {
+    background: none;
+}
+
+.sidebar-collapse .nav {
+    padding: 0;
+}
+
+.sidebar-collapse .nav>li>a {
+    color: #ffffff;
+    font-weight: bold;
+    background: transparent;
+    text-shadow: none;
+}
+
+.sidebar-collapse>.nav>li>a {
+    padding: 14px 14px 14px 20px;
     font-size: 16px;
-    min-width: 220px;
+}
+
+.sidebar-collapse>.nav>li {
+    border-bottom: 1px solid #232a27;
+}
+
+.navbar-default {
+    border: 0px solid #1f2837;
+}
+
+.navbar-default .navbar-toggle {
     border-color: #D9B08C;
 }
 
-#estimator:hover {
-    background-color: #0a3b3d;
-    color: white;
-    
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.fa-th-list,
+.fa-python,
+.fa-file,
+.material-icons {
+    color: #FFCB9A;
+    margin-right: 2px;
+
+}
+
+/* Hovers and Focuses --------------------------------------------------------*/
+
+.sidebar-collapse .nav>li>a:hover,
+.sidebar-collapse .nav>li>a:focus {
+    outline: 0;
+    background-color: #116466
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #116466;
+}
+
+.nav-second-level:hover,
+.nav-second-level:focus {
+    background-color: #232a27;
+}
+
+.nav>li:focus,
+.nav>li:hover {
+    background-color: #232a27;
+}
+
+/*------------------------------------------------------------------------------
+    NAVREDUCE (Button) 
+------------------------------------------------------------------------------*/
+
+#NavReduce {
+    float: left;
+    left: 0;
+    z-index: 3;
+    color: #1F2837;
+    cursor: pointer;
+    font-size: 44px;
+    line-height: 33px;
+    margin: 7px 0 0 13px;
+    background: #FFCB9A;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 34px;
+    padding-top: 8px;
+    margin-top: 10px;
+    border-radius: 50%;
+}
+
+.closed {
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.dp48 {
+    color:#FFCB9A;
 }
 
 /*------------------------------------------------------------------------------
@@ -254,13 +368,10 @@ form p {
 ------------------------------------------------------------------------------*/
 
 #GreyFooter {
-    background-color: #232a27;
+    background-color: #090f19;
     color: white;
     padding-top: 10px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    
     width: 100%;
 }
 
@@ -310,119 +421,788 @@ form p {
     color: #FFCB9A;
 }
 
+/*------------------------------------------------------------------------------
+    DASHBOARD CARDS    
+------------------------------------------------------------------------------*/
 
+/* page-index ----------------------------------------------------------------*/
+
+#menu_card {
+    background-color: #2a333c;
+    min-height: 220px;
+    border-color: #2a333c;
+    border-radius: 15px;
+    margin: 10px;
+
+    padding: 10px;
+}
+
+/*#menu_card:hover,*/
+/*#menu_card:focus {*/
+    
+/*}*/
+
+#menu_card p {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+}
+
+#menu_card i {
+    font-size: 60px;
+    padding: 30px 30px 15px 30px;
+}
+
+/* page-selection ------------------------------------------------------------*/
+
+#title_card {
+    background-color: #2a333c;
+    border-style: outset;
+    border-color: #2b4056;
+    border-radius: 15px;
+    vertical-align: middle;
+    border-width: 3px;
+    padding: 10px;
+}
+
+#title_card p {
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 17px;
+    margin-bottom: 0px;
+}
+
+#title_card h3 {
+    color: #FFCB9A;
+    font-size: 20px;
+    margin: 10px;
+}
+
+#algorithm {
+    background-color: #232a27;
+    min-height: 220px;
+    border-style: outset;
+    border-color: #D9B08C;
+    border-radius: 15px;
+    margin: 10px;
+    padding-top: 30px;
+}
+
+#algorithm:hover,
+#algorithm:focus {
+    background-color: #0E5254;
+}
+
+#algorithm p {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px;
+}
+
+#plot {
+    height: 80%;
+    width: 80%;
+    border-radius: 15px;
+}
+
+/* page-algorithm ------------------------------------------------------------*/
+
+#info_content {
+    background-color: #232a27;
+    min-height: 220px;
+    border-style: outset;
+    border-color: #D9B08C;
+    border-radius: 15px;
+    margin: 10px;
+    padding-top: 30px;
+}
+
+#info_content h2 {
+    padding: 0px 10px 20px 10px;
+    color: #FFCB9A;
+}
+
+#pyplot {
+    background-color: #232a27;
+    min-height: 220px;
+    border-style: outset;
+    border-color: #D9B08C;
+    border-radius: 15px;
+    margin: 10px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+#pyplot h2 {
+    padding: 0px 10px 20px 10px;
+    color: #FFCB9A;
+}
+
+#pyplot #plot {
+    height: 70%;
+    width: 70%;
+}
+
+.card-panel {
+    background-color: #0E5254;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 10px 5px 5px 15px;
+    margin: 10px;
+    margin-bottom: 10px;
+}
+
+.card-panel:hover {
+    background-color: #093233;
+}
+
+.card-panel a {
+    text-decoration: none
+}
+
+.card-panel a>p {
+    color: white;
+    margin-bottom: 0px;
+}
+
+#red_flag:hover {
+    background-color: red;
+}
+
+/* Other ---------------------------------------------------------------------*/
+
+#terms_card {
+    background-color: #232a27;
+    border-style: outset;
+    border-color: #D9B08C;
+    border-radius: 15px;
+    vertical-align: middle;
+    padding: 11px
+}
+
+#terms_card li,
+#terms_card p {
+    color: white;
+    font-size: 14px;
+}
+
+#terms_card h3 {
+    color: #D9B08C;
+    font-size: 24px;
+    margin: 13px;
+}
+
+#terms_card ol {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#contact_card {
+    background-color: #232a27;
+    min-height: 220px;
+    border-style: outset;
+    border-color: #D9B08C;
+    border-radius: 15px;
+    margin: 10px;
+    padding: 30px;
+    color: black;
+}
+
+#contact_card p {
+    font-size: 30px;
+    color: #FFCB9A;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+#contact_card h2 {
+    padding: 0px 10px 10px 10px;
+    color: #FFCB9A;
+    font-size: 24px;
+}
+
+#contact_card h3 {
+    font-size: 30px;
+    color: #FFCB9A;
+    font-style: italic;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+
+#repo_content {
+    background-color: #232a27;
+    margin: 10px;
+    padding-top: 30px;
+}
+
+#repo_content h1,
+a {
+    color: white;
+    margin-top: 10px;
+}
+
+.small-name a {
+    color: #FFCB9A;
+
+}
+
+#repo_content li {
+    background-color: #0E5254;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 5px 1px 1px 10px;
+    margin: 10px;
+    margin-bottom: 10px;
+}
+
+#repo_content li:hover {
+    background-color: #093233;
+
+}
+
+#repo_content a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+input[type=text],
+select,
+textarea {
+    width: 100%;
+    height: 50px;
+    padding: 12px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    background-color: white;
+}
+
+label {
+    
+    font-size: 20px;
+}
+
+
+/*----------------------------------------------
+    ANIMATIONS  
+------------------------------------------------*/
+
+#menu_card {
+    -webkit-animation: fadein 1s;
+    -moz-animation: fadein 1s;
+    -ms-animation: fadein 1s;
+    -o-animation: fadein 1s;
+    animation: fadein 1s;
+}
+
+#plot {
+    -webkit-animation: fadein 2s;
+    -moz-animation: fadein 2s;
+    -ms-animation: fadein 2s;
+    -o-animation: fadein 2s;
+    animation: fadein 2s;
+}
+
+.card-panel p {
+    -webkit-animation: fadein 1s;
+    -moz-animation: fadein 1s;
+    -ms-animation: fadein 1s;
+    -o-animation: fadein 1s;
+    animation: fadein 1s;
+}
+
+
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 /*----------------------------------------------
     MEDIA QUERIES     
 ------------------------------------------------*/
 
+/* MIN WIDTHS ----------------------------------------------------------------*/
 
+@media(min-width:1811px) {
+    #page-index {
+        min-height: 1000px;
+    }
+    #page-selection {
+        min-height: 1400px;
+    }
+    #page-algorithm {
+        min-height: 1600px;
+    }
+    #page-projects {
+        min-height: 1400px;
+    }
+}
+
+@media(min-width:768px) {
+    #page-wrapper {
+        margin: 0 0 0 0px;
+        padding: 0;
+    }
+
+    .sidebar-collapse>.nav>li>a {
+        padding: 14px 14px 14px 20px;
+    }
+    .navbar {
+        border-radius: 0px;
+    }
+    #header_card p {
+        font-size: 40px;
+        color: white;
+    }
+}
 
 /* MAX WIDTHS: LARGE SCREEN---------------------------------------------------*/
 
 @media(max-width:1810px) {
 
+    #page-index {
+        min-height: 1000px;
+    }
+    #page-selection {
+        min-height: 1000px;
+    }
+    #page-algorithm {
+        min-height: 1200px;
+    }
+
+
+    .col-md-12 {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #title_card p {
+        font-size: 30px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 100px;
+    }
+    #menu_card p {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 40px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-width: 160px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding-top: 20px;
+    }
+    #plot {
+        height: 60%;
+        width: 60%;
+    }
+    .card-panel {
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 18px;
     }
-    
+    #pyplot h2 {
+        font-size: 18px;
+    }
+    #pyplot #plot {
+        height: 70%;
+        width: 70%;
+    }
+
+    #terms_card {
+        display: none;
+    }
+    #subject {
+        max-height: 150px;
+    }
 
 }
 
 @media(max-width:1381px) {
 
+    #page-wrapper {
+        margin: 0 0 0 0px;
+    }
+    #page-index {
+        min-height: 800px;
+    }
+    #page-selection {
+        min-height: 1000px;
+    }
+    #page-algorithm {
+        min-height: 1200px;
+    }
+    #page-projects {
+        min-height: 1200px;
+    }
+
+    .col-md-12 {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    #title_card p {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 100px;
+    }
+    #menu_card p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 20px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-width: 160px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding-top: 20px;
+    }
+    #plot {
+        height: 60%;
+        width: 60%;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+        padding: 10px 2px 5px 2px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 18px;
     }
-   
+    #pyplot h2 {
+        font-size: 18px;
+    }
+    #pyplot #plot {
+        height: 70%;
+        width: 70%;
+    }
+    #repo_content {
+        margin: 0px;
+        padding: 0px;
+    }
+    #repo_content h1,
+    h2 {
+        font-size: 18px;
+    }
+    #repo_content li {
+        font-size: 12px;
+    }
+    #subject {
+        max-height: 120px;
+    }
+
 }
 
 /* MAX WIDTHS: MEDIUM SCREEN---------------------------------------------------*/
 
 @media(max-width:1200px) {
+    #page-wrapper {
+        position: relative;
+        top: 50px;
+    }
+    #page-index {
+        min-height: 800px;
+    }
+    #page-selection {
+        min-height: 1500px;
+    }
+    #page-algorithm {
+        min-height: 1800px;
+    }
+    #page-projects {
+        min-height: 1200px;
+    }
 
- 
+    .row {
+        margin-bottom: 10px;
+    }
+    .navbar-side {
+        top: 55px;
+    }
     .top-navbar .nav>li>a {
         padding: 16px;
         font-size: 16px;
     }
-
+    #title_card p {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 100px;
+    }
+    #menu_card p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 20px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-height: 50px;
+    }
+    #algorithm p {
+        font-size: 20px;
+        font-weight: bold;
+        padding-top: 20px;
+    }
+    #plot {
+        height: 75%;
+        width: 75%;
+    }
+    .card-panel {
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 18px;
     }
+    #pyplot h2 {
+        font-size: 18px;
+    }
+    #pyplot #plot {
+        height: 70%;
+        width: 70%;
+    }
 }
 
 @media(max-width:1056px) {
 
-
+    #page-wrapper {
+        position: relative;
+        top: 40px;
+        margin: 0 0 0 260px;
+    }
+    #page-index {
+        min-height: 800px;
+    }
+    #page-selection {
+        min-height: 1450px;
+    }
+    #page-algorithm {
+        min-height: 1800px;
+    }
+    #page-projects {
+        min-height: 1250px;
+    }
+    .navbar-side {
+        top: 60px;
+        width: 260px;
+    }
     .top-navbar .nav>li>a {
         padding: 16px;
         font-size: 16px;
     }
+    .sidebar-collapse>.nav>li>a {
+        font-size: 15px;
+    }
+    #algorithm {
+        min-height: 0px;
+    }
+    #algorithm p {
+        font-size: 20px;
+        font-weight: bold;
+        padding-top: 20px;
+    }
+    #plot {
+        height: 75%;
+        width: 75%;
+    }
+    #info_card {
+        min-height: 120px;
+        padding: 10px;
+    }
+    #info_card h3 {
+        font-size: 14px;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 15px;
     }
-    #info_content h1 {
-        font-size: 24px
+    #pyplot h2 {
+        font-size: 15px;
     }
-
-    label {
-        color: white;
-        font-size: 14px;
-        border-radius: 10px;
-        padding-right: 10px;
-    }
-
-    form p {
-        color: #D9B08C;
-        font-size: 20px;
-        font-weight: bold;
+    #pyplot #plot {
+        height: 70%;
+        width: 70%;
     }
 }
 
 @media(max-width:993px) {
-
-    .top-navbar .navbar-brand {
-        width: 250px;
+    #page-wrapper {
+        position: relative;
+        top: 70px;
     }
-
+    #page-index {
+        min-height: 1200px;
+    }
+    #page-selection {
+        min-height: 1250px;
+    }
+    #page-algorithm {
+        min-height: 2600px;
+    }
+    #page-projects {
+        min-height: 1800px;
+    }
+    .navbar-side {
+        top: 60px;
+    }
+    .top-navbar .navbar-brand {
+        width: 300px;
+    }
+    #title_card p {
+        font-size: 36px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 50px;
+    }
+    #menu_card p {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 30px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-height: 50px;
+        padding-top: 0px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #plot {
+        height: 0;
+        width: 0;
+    }
+    #info_card {
+        min-height: 0px;
+    }
+    #info_card h3 {
+        font-size: 12px;
+        padding: 0px;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 15px;
+    }
+    #pyplot h2 {
+        font-size: 15px;
+    }
+    #pyplot #plot {
+        height: 30%;
+        width: 30%;
+    }
+
+    #GreyFooter {
+        text-align: center;
     }
 }
 
@@ -436,41 +1216,169 @@ form p {
 /* MAX WIDTHS: SMALL SCREEN---------------------------------------------------*/
 
 @media(max-width:767px) {
-
+    #page-wrapper {
+        position: relative;
+        top: 90px;
+        margin: 0 0 0 0px;
+    }
+    #page-index {
+        min-height: 1600px;
+    }
+    #page-selection {
+        min-height: 1250px;
+    }
+    #page-algorithm {
+        min-height: 2800px;
+    }
+    #page-projects {
+        min-height: 1800px;
+    }
     #top_icon {
         font-size: 0px;
+    }
+    .navbar-side {
+        top: 95px;
     }
     .top-navbar .nav>li>a {
         padding: 8px;
         font-size: 14px;
         color: #FFCB9A;
     }
+    #NavReduce {
+        display: none;
+    }
+    #title_card p {
+        font-size: 36px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 50px;
+    }
+    #menu_card p {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 30px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-height: 50px;
+        padding-top: 0px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #plot {
+        height: 0;
+        width: 0;
+    }
+    #info_card {
+        min-height: 0px;
+    }
+    #info_card h3 {
+        font-size: 12px;
+        padding: 0px;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 10px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
         color: #FFCB9A;
         font-size: 15px;
+    }
+    #pyplot h2 {
+        font-size: 15px;
+    }
+    #pyplot #plot {
+        height: 30%;
+        width: 30%;
+    }
+    #GreyFooter {
+        text-align: center;
     }
 }
 
 /* MAX WIDTHS: EXTRA-SMALL SCREEN---------------------------------------------*/
 
 @media(max-width:521px) {
-
-
+    #page-wrapper {
+        position: relative;
+        top: 100px;
+    }
+    #page-index {
+        min-height: 1400px;
+    }
+    #page-selection {
+        min-height: 1300px;
+    }
+    #page-algorithm {
+        min-height: 2800px;
+    }
+    #page-projects {
+        min-height: 1800px;
+    }
+    .col-md-12 {
+        padding: 0px;
+    }
+    #dropdown1 {
+        left: 0px !important;
+    }
     .top-navbar .nav>li>a {
         padding: 8px;
         font-size: 12px;
         color: #FFCB9A;
     }
+    .navbar-side {
+        top: 90px;
+    }
+    #title_card p {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 50px;
+    }
+    #menu_card p {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 20px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-height: 50px;
+        padding-top: 0px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 0px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
@@ -479,10 +1387,53 @@ form p {
     }
 }
 
+#info_card {
+    min-height: 0px;
+}
 
+#info_card h3 {
+    font-size: 12px;
+    padding: 0px;
+}
+
+#pyplot #plot {
+    height: 60%;
+    width: 60%;
+    padding: 0px;
+}
+
+#pyplot {
+    padding-top: 0px;
+}
+
+#pyplot h2 {
+    font-size: 12px;
+}
+
+#contact_card {
+    padding: 10px;
+}
+
+#GreyFooter {
+    font-size: 14px;
+    padding-top: 0px;
+}
+
+#GreyFooter .row {
+    margin-bottom: 10px;
+}
+
+}
 
 @media(max-width:480px) {
 
+    #page-wrapper {
+        position: relative;
+        top: 100px;
+    }
+    #page-selection {
+        min-height: 1250px;
+    }
 
     .top-navbar .material-icons {
         font-size: 20px;
@@ -491,10 +1442,45 @@ form p {
         padding: 6px;
         font-size: 10px;
     }
+    #title_card p {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 17px;
+    }
+    #menu_card {
+        min-height: 50px;
+    }
+    #menu_card p {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #menu_card i {
+        font-size: 20px;
+        padding: 10px 10px 5px 10px;
+    }
+    #algorithm {
+        min-height: 50px;
+        padding-top: 0px;
+    }
+    #algorithm p {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    #plot {
+        height: 0;
+        width: 0;
+    }
+    .card-panel {
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 15px;
+    }
     #info_content {
         min-height: 0px;
         margin: 0px;
-        padding: 10px;
+        padding-top: 10px;
     }
     #info_content h2 {
         padding: 0px 10px 10px 10px;
@@ -504,7 +1490,14 @@ form p {
 }
 
 @media(max-width:376px) {
-
+    #page-wrapper {
+        position: relative;
+        top: 80px;
+        margin-left: 0px;
+    }
+    #dropdown1 {
+        left: 0px !important;
+    }
     .top-navbar .nav>li>a {
         padding: 4px 0px 4px 0px;
         font-size: 10px;
@@ -512,14 +1505,31 @@ form p {
     .top-navbar .material-icons {
         font-size: 14px;
     }
-    .btn {
-        width: 200px;
+    .navbar-side {
+        top: 85px;
+    }
+    #info_card {
+        min-height: 0px;
+    }
+    #info_card h3 {
+        font-size: 12px;
+        padding: 0px;
+    }
+    #GreyFooter {
+        font-size: 14px;
+        padding-top: 0px;
+    }
+    #GreyFooter .row {
+        margin-bottom: 1px;
     }
 }
 
 @media(max-width:321px) {
 
- 
+    #dropdown1 {
+        left: -80px !important;
+        top: 40px !important;
+    }
     .top-navbar .nav>li>a {
         padding: 10px 0px 10px 0px;
         font-size: 10px;
@@ -527,28 +1537,96 @@ form p {
     .navbar-side {
         top: 100px;
     }
-}
-
-.table-responsive {
-    background-color: #C0C0C0;
- 
-}
-
-.card-content {
-    background-color: black;
-}
-.card {
-     background-color: black;
+    #GreyFooter {
+        font-size: 14px;
+        padding-top: 0px;
+    }
+    #GreyFooter .row {
+        margin-bottom: 1px;
+    }
 }
 
 
-
-/* NEW  */
-
-.select-dropdown {
+th, tr {
     color: white;
 }
-/*#dataTables-example_filter {*/
-/*    display: none;*/
-/*}*/
+
+.table {
+    background-color: #1a2026;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: #2a333c;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n) {
+    background-color: #1a2026;
+}
+
+.table-bordered {
+    border-color: #2b4056;
+}
+
+
+.table-bordered > thead > tr > th {
+    border-color: #2b4056;
+    font-size: 14px;
+    
+}
+
+.table-bordered > tbody > tr > td {
+    border-color: #2b4056;
+    font-size: 12px;
+    
+}
+
+.table > tbody > tr > td {
+   vertical-align: middle !important; 
+}
+
+
+
+.pagination > .active > a {
+    background-color: #2b4056;
+    border-color: #2b4056;
+}
+
+.pagination > .active > a:hover {
+    background-color: white;
+    color: black;
+}
+
+.pagination li.disabled a {
+    background-color: #1a2026;
+    border-color: #1a2026;
+    color: white;
+}
+
+label {
+    color: #FFCB9A;
+}
+
+
+.card .card-action {
+    border-top: none;
+}
+
+
+input[type="search"] {
+    color: white;
+}
+
+
+#add{
+    width: 200px;
+    
+}
+
+#add p {
+    font-size: 14px;
+}
+
+
+
+
 
