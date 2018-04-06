@@ -125,8 +125,9 @@ wa.whoosh_index(app, CodeRepo)
 @app.route('/library')
 def library():
     codes = CodeRepo.query.all()
+    types = Types.query.all()
  
-    return render_template("library.html", codes = codes)
+    return render_template("library.html", codes = codes, types = types)
     
     
 @app.route('/download_code/<code_id>', methods=['GET'])
