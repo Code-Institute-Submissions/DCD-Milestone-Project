@@ -1,0 +1,146 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="card" id="title_card">
+            <h2>Regression</h2>
+            <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos aspernatur voluptas excepturi tenetur autem incidunt. Consectetur ut consequatur, rem itaque ullam et debitis, earum aperiam numquam rerum obcaecati, voluptatem similique
+                sequi vero voluptate illum magni animi cupiditate unde accusantium, autem dignissimos? Nisi ut officia praesentium nobis iste dolor id delectus.
+            </h5>
+            <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos aspernatur voluptas excepturi tenetur autem incidunt. Consectetur ut consequatur, rem itaque ullam et debitis, earum aperiam numquam rerum obcaecati, voluptatem similique
+                sequi vero voluptate illum magni animi cupiditate unde accusantium, autem dignissimos? Nisi ut officia praesentium nobis iste dolor id delectus.
+            </h5>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 text-left">
+        <div class="card" id="title_card">
+            <h2>About Dataset</h2>
+            <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos aspernatur voluptas excepturi tenetur autem incidunt. Consectetur ut consequatur, rem itaque ullam et debitis, earum aperiam numquam rerum obcaecati, voluptatem similique
+                sequi vero voluptate illum magni animi cupiditate unde accusantium, autem dignissimos? Nisi ut officia praesentium nobis iste dolor id delectus.
+            </h5>
+            {{describe | safe}}
+        </div>
+    </div>
+    <div class="col-md-8 text-left">
+
+        <div class="row">
+            <div class="card" id="title_card">
+                <h3>No. of Rows: {{rows}}</h3>
+                <h3>No. of Columns: {{columns}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card" id="title_card">
+                {{data | safe}}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="card" id="title_card">
+            <h2>Data Question</h2>
+                          {% for regressor in regressors %}
+                    <a href="{{url_for('regressor', regressor_id=regressor.id)}}" class="waves-effect waves-light btn btn_small" style="display:inline">{{regressor.name}}</a> {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3 text-center">
+        <div class="row">
+        </div>
+        <div class="row">
+        </div>
+    </div>
+    <div class="col-md-6 text-center">
+        <div class="row">
+        </div>
+        <div class="row">
+        </div>
+    </div>
+</div>
+<div class="row">
+</div>
+
+
+
+<div class="row" id="menu_row">
+    <div class="col-md-4 text-center">
+        <div class="card" id="title_card">
+            <h2>Preprocessing</h2>
+            <div class="card-panel">
+                <h3>No. of Rows: {{rows}}</h3>
+                <h3>No. of Columns: {{columns}}</h3>
+                <h3>Statistical</h3>
+                {{describe | safe}}
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 text-center">
+        <div class="card" id="title_card">
+            <h2>Dataset</h2>
+            <div class="card-panel">
+                {{data | safe}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="menu_row">
+    <div class="col-md-12 text-center">
+        <div class="card" id="title_card">
+            <h2>Dataset</h2>
+        </div>
+    </div>
+</div>
+<div class="row" id="menu_row">
+    <div class="col-md-12 text-center">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
+            <div class="row">
+                <div class="card" id="title_card">
+                    <select id="regressor" name="regressor">
+                          <h2><option value="" disabled selected>Choose Regressor</option></h2>
+                          {% for regressor in regressors %}
+                          <option value={{regressor.name}}>{{regressor.name}}</option>
+                          
+                        </select>
+                    <a href="{{url_for('regressor', regressor_id=regressor.id)}}" class="waves-effect waves-light btn btn_small">Choose</a> {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 text-center">
+            <div class="row">
+                <div class="card" id="title_card">
+                    <h2>Plot</h2>
+                    <img src="data:image/png;base64, {{ plot_url }}" class="img-rounded" alt="aqui" width="304" height="236">
+                </div>
+            </div>
+            <div class="row">
+                <div class="card" id="title_card">
+                    <div class="card-panel">
+                        {{pred}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card" id="title_card">
+
+                    <h2>{{algo.algo_type}}</h2>
+                    {% for element in algo.preprocessers %}
+                    <h2> {{element.name}} </h2>
+                    {% endfor %} {% for element in algo.issues %}
+                    <h2>{{element.issue}}</h2>
+                    {% endfor %}
+                    <h3> </h3>
+                    <h3> </h3>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

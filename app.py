@@ -322,21 +322,20 @@ def regression():
     dataset = pd.read_csv('Position_Salaries.csv')
     X = dataset.iloc[:, 1:2].values
     y = dataset.iloc[:, 2:3].values
-    dataset_head = dataset.head()
     describe = dataset.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
     pred = '6.5'
     
-    return render_template('regression.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, regressors = regressors, algo = algo)
+    return render_template('regression.html', data = dataset.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, regressors = regressors, algo = algo)
     
 @app.route('/regressor/<regressor_id>')
 def regressor(regressor_id):
     regressors = Regression.query.all() 
+    algo = AlgoTypes.query.filter_by(algotype_id = 1).first()
     dataset = pd.read_csv('Position_Salaries.csv')
     X = dataset.iloc[:, 1:2].values
     y = dataset.iloc[:, 2:3].values
-    dataset_head = dataset.head()
     describe = dataset.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
@@ -365,6 +364,8 @@ def regressor(regressor_id):
         plt.gcf().clear()
         
         pred = lin_reg.predict(poly_reg.fit_transform(6.5))
+        pred = pred.flat[0]
+        pred = ('%.2f' % (pred,)).rstrip('0').rstrip('.')
         
     elif choice == '2':
         sc_X = StandardScaler()
@@ -389,7 +390,8 @@ def regressor(regressor_id):
         plt.gcf().clear()
         
         pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))
-        
+        pred = pred.flat[0]
+        pred = ('%.2f' % (pred,)).rstrip('0').rstrip('.')
     else: 
         regressor = RandomForestRegressor(n_estimators = 600, random_state = 0)
         regressor.fit(X,y)
@@ -408,8 +410,10 @@ def regressor(regressor_id):
         plot_url = base64.b64encode(img.getvalue())
         plt.gcf().clear()
         pred = regressor.predict(6.5)
+        pred = pred.flat[0]
+        pred = ('%.2f' % (pred,)).rstrip('0').rstrip('.')
         
-    return render_template('regression.html', data = dataset_head.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, regressors = regressors)
+    return render_template('regression.html', data = dataset.to_html(), describe = describe.to_html(), pred = pred, plot_url=plot_url, rows = rows, columns = columns, regressors = regressors, algo = algo)
 
 
 @app.route('/clustering')

@@ -77,7 +77,8 @@ html {
     text-align: center;
 }
 
-.btn {
+.btn,
+.btn-large {
     color: white;
     background-color: #2b4056;
     border-radius: 5px;
@@ -86,10 +87,18 @@ html {
     display: block;
     margin: 0 auto;
     font-weight: bold;
-    line-height: 25px;
+
     font-size: 10px;
 }
 
+.btn {
+    line-height: 25px;
+}
+
+
+
+.btn-large:hover,
+.btn-large:focus,
 .btn:hover,
 .btn:focus {
     background-color: white;
@@ -456,9 +465,16 @@ html {
     margin-bottom: 0px;
 }
 
-#title_card h3 {
+#title_card h3,
+h2 {
     color: #FFCB9A;
     font-size: 20px;
+    margin: 5px;
+}
+
+#title_card h5 {
+    color: white;
+    font-size: 14px;
     margin: 5px;
 }
 
@@ -488,69 +504,179 @@ html {
     margin: 10px;
 }
 
+#main_card {
+    background-color: #1a2026;
+    border-style: outset;
+    border-color: #2b4056;
+    border-radius: 15px;
+    vertical-align: middle;
+    border-width: 3px;
+    padding: 20px;
 
 
+}
+
+#main_card p {
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 17px;
+    margin-bottom: 0px;
+}
+
+#main_card h1 {
+    color: #FFCB9A;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+#main_card h3,
+h2 {
+    color: #FFCB9A;
+    font-size: 20px;
+    margin: 5px;
+}
+
+#main_card h4 {
+    color: white;
+    margin: 5px;
+}
+
+#main_card h5 {
+    color: white;
+    font-size: 14px;
+    margin: 5px;
+}
+
+table {
+    margin-left: 5px;
+}
+
+#description_card {
+    background-color: #2a333c;
+    border-style: solid;
+    border-color: #222931;
+    border-radius: 5px;
+    vertical-align: middle;
+    border-width: 2px;
+    padding: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
+
+#description_card p {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 0px;
+    padding: 0px;
+}
+
+#description_card h3 {
+    color: #FFCB9A;
+    font-size: 20px;
+    margin: 10px;
+}
+
+#desc_col {
+    padding-right: 0px;
+}
+
+#description_card th,
+tr {
+    padding: 2px;
+}
+
+#description_card ol {
+    margin: 8px;
+}
+
+table {
+    background-color: #222931;
+    border-radius: 5px;
+}
+
+
+
+
+#text_card h2 {
+    margin-left: 0px;
+}
+
+#text_card li,
+a {
+    color: white;
+    font-weight: bold;
+    margin-left: 15px;
+    padding: 3px;
+    font-size: 14px;
+}
+
+#linking {
+    font-size: 14px;
+}
+
+#text_card a {
+    margin: 0px;
+    font-size: 14px;
+}
+
+#text_card a:hover {
+    color: #FFCB9A;
+}
 
 
 #algorithm {
-    background-color: #232a27;
-    min-height: 220px;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 15px;
-    margin: 10px;
-    padding-top: 30px;
+    background-color: #2a333c;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 5px;
+    min-height: 260px;
+    vertical-align: middle;
+    border-width: 1px;
+    padding: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    min-height: 406px;
 }
 
-#algorithm:hover,
-#algorithm:focus {
-    background-color: #0E5254;
-}
+
 
 #algorithm p {
     color: white;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     padding: 20px;
+    margin-left: 10px;
 }
 
-#plot {
-    height: 80%;
-    width: 80%;
-    border-radius: 15px;
+#text {
+    color: white;
 }
 
-/* page-algorithm ------------------------------------------------------------*/
 
-#info_content {
-    background-color: #232a27;
-    min-height: 220px;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 15px;
-    margin: 10px;
-    padding-top: 30px;
-}
-
-#info_content h2 {
-    padding: 0px 10px 20px 10px;
-    color: #FFCB9A;
-}
 
 #pyplot {
-    background-color: #232a27;
-    min-height: 220px;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 15px;
-    margin: 10px;
-    padding-top: 30px;
-    padding-bottom: 40px;
+    background-color: #2a333c;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 5px;
+    min-height: 260px;
+    vertical-align: middle;
+    border-width: 1px;
+    padding: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    min-height: 406px;
 }
 
 #pyplot h2 {
-    padding: 0px 10px 20px 10px;
     color: #FFCB9A;
+    font-size: 20px;
+    margin: 10px;
 }
 
 #pyplot #plot {
@@ -558,100 +684,14 @@ html {
     width: 70%;
 }
 
-.card-panel {
-    background-color: #0E5254;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 15px;
-    padding: 10px 5px 5px 15px;
-    margin: 10px;
-    margin-bottom: 10px;
-}
 
-.card-panel:hover {
-    background-color: #093233;
-}
-
-.card-panel a {
-    text-decoration: none
-}
-
-.card-panel a>p {
-    color: white;
-    margin-bottom: 0px;
-}
-
-#red_flag:hover {
-    background-color: red;
-}
-
-/* Other ---------------------------------------------------------------------*/
-
-#terms_card {
-    background-color: #232a27;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 15px;
-    vertical-align: middle;
-    padding: 11px
-}
-
-#terms_card li,
-#terms_card p {
-    color: white;
-    font-size: 14px;
-}
-
-#terms_card h3 {
-    color: #D9B08C;
-    font-size: 24px;
-    margin: 13px;
-}
-
-#terms_card ol {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-#contact_card {
-    background-color: #232a27;
-    min-height: 220px;
-    border-style: outset;
-    border-color: #D9B08C;
-    border-radius: 15px;
-    margin: 10px;
-    padding: 30px;
-    color: black;
-}
-
-#contact_card p {
-    font-size: 30px;
-    color: #FFCB9A;
-    padding-bottom: 50px;
-    padding-top: 50px;
-}
-
-#contact_card h2 {
-    padding: 0px 10px 10px 10px;
-    color: #FFCB9A;
-    font-size: 24px;
-}
-
-#contact_card h3 {
-    font-size: 30px;
-    color: #FFCB9A;
-    font-style: italic;
-    padding-bottom: 50px;
-    padding-top: 50px;
-}
 
 
 #repo_content {
     margin: 10px;
     padding-top: 0px;
     overflow: auto;
-    height: 398px;
+    height: 410px;
 }
 
 
@@ -1399,35 +1439,6 @@ label {
     padding: 0px;
 }
 
-#pyplot #plot {
-    height: 60%;
-    width: 60%;
-    padding: 0px;
-}
-
-#pyplot {
-    padding-top: 0px;
-}
-
-#pyplot h2 {
-    font-size: 12px;
-}
-
-#contact_card {
-    padding: 10px;
-}
-
-#GreyFooter {
-    font-size: 14px;
-    padding-top: 0px;
-}
-
-#GreyFooter .row {
-    margin-bottom: 10px;
-}
-
-}
-
 @media(max-width:480px) {
 
     #page-wrapper {
@@ -1606,7 +1617,7 @@ tr {
     color: white;
 }
 
-.pagination > li > a {
+.pagination>li>a {
     background-color: #2b4056;
     border-color: #2b4056;
     color: white;
@@ -1642,7 +1653,8 @@ input:focus {
     outline: none;
 }
 
-input[type="text"]:focus:not([readonly]) {
+input[type="text"]:focus:not([readonly]),
+input[type="text"].valid {
     border-bottom: none;
     box-shadow: none;
 }
@@ -1664,21 +1676,21 @@ input[type="text"]:focus:not([readonly]) {
     height: 30px;
 }
 
-.input-field .prefix ~ input {
+.input-field .prefix~input {
     width: 90%;
     margin-top: 5px;
 }
 
-.prefix ~ .select-wrapper {
+.prefix~.select-wrapper {
     width: 90%;
 }
 
-.input-field .prefix ~ label {
+.input-field .prefix~label {
     margin-left: 30px;
     color: #FFCB9A;
 }
 
-.input-field.col .prefix ~ .validate ~ label {
+.input-field.col .prefix~.validate~label {
     margin-left: 35px;
     color: #FFCB9A;
 }
@@ -1701,22 +1713,23 @@ input[type="text"]:focus:not([readonly]) {
     color: #FFCB9A;
 }
 
-#author, #name {
+#author,
+#name {
     height: 40px;
     margin-top: 0px;
 }
 
 
-.dropdown-content li > span {
+.dropdown-content li>span {
     color: white;
 }
 
-.dropdown-content li > span:hover {
+.dropdown-content li>span:hover {
     background-color: #2b4056;
 }
 
-.select-dropdown li.disabled > span {
-    
+.select-dropdown li.disabled>span {
+
     color: #FFCB9A;
 }
 
