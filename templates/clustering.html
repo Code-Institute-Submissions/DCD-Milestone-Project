@@ -1,90 +1,123 @@
 {% extends 'base.html' %} {% block content %}
-<div class="row" id="menu_row">
-    <div class="col-md-12 text-center">
-        <div class="card" id="info_content">
-            <h2>Dataset</h2>
-        </div>
-    </div>
-</div>
-<div class="row" id="menu_row">
-    <div class="col-md-4 text-center">
-        <div class="card" id="info_content">
-            <h2>Preprocessing</h2>
-            <div class="card-panel">
-                <p>No. of Rows: {{rows}}</p>
-                <p>No. of Columns: {{columns}}</p>
-                <p>Statistical</p>
-                {{describe | safe}}
+<div class="card text-center" id="main_card">
+    <h1>Machine Learning: Classification</h1>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12 text-center" id="desc_col">
+            <div class="card" id="description_card">
+                <div class="row text-center">
+                    <div class="col-md-3 text-left" id="text_card">
+                        <h2>Overview:</h2>
+                        <p>
+                        </p>
+                    </div>
+                    <div class="col-md-3 text-left" id="text_card">
 
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8 text-center">
-        <div class="card" id="info_content">
-            <h2>Dataset</h2>
-            <div class="card-panel">
-                {{data | safe}}
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row" id="menu_row">
-    <div class="col-md-12 text-center">
-        <div class="card" id="info_content">
-            <h2>Dataset</h2>
-        </div>
-    </div>
-</div>
-<div class="row" id="menu_row">
-    <div class="col-md-12 text-center">
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
-            <div class="row">
-                <div class="card" id="info_content">
-                        <select id="clusterer" name="clusterer">
-                          <h2><option value="" disabled selected>Choose Clusterer</option></h2>
-                          {% for clusterer in clusterers %}
-                          <option value={{clusterer.name}}>{{clusterer.name}}</option>
-                          
-                        </select>
-                        <a href="{{url_for('clusterer', clusterer_id=clusterer.id)}}" class="waves-effect waves-light btn btn_small">Choose</a>
+                        <h2>Real life example:</h2>
+                        <li>Email spam detector</li>
+                        <li>Handwritten Digit Recognition.</li>
+                        <li>Speech Recognition.</li>
+                        <li>DNA Sequence Classification.</li>
+                    </div>
+                    <div class="col-md-2 text-left" id="text_card">
+                        <h2>Preprocessing:</h2>
+                        {% for element in algo.preprocessers %}
+                        <li> {{element.name}} </li>
                         {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 text-center">
-            <div class="row">
-                <div class="card" id="info_content">
-                    <h2>Plot</h2>
-                    <img src="data:image/png;base64, {{ plot_url }}"class="img-rounded" alt="aqui" width="304" height="236">
-                </div>
-            </div>
-            <div class="row">
-                <div class="card" id="info_content">
-                    <div class="card-panel">
-                        <img src="data:image/png;base64, {{ plot_determine }}"class="img-rounded" alt="aqui" width="304" height="236">
+                    </div>
+                    <div class="col-md-2 text-left" id="text_card">
+                        <h2>Possible issues:</h2>
+                        {% for element in algo.issues %}
+                        <li>{{element.issue}}</li>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-2 text-left" id="text_card">
+                        <h2>Read more:</h2>
+                        <li><a target="_blank" href="https://machinelearningmastery.com/classification-versus-regression-in-machine-learning/">Machine Learning Mastery</a></li>
+                        <li><a target="_blank" href="https://www.geeksforgeeks.org/regression-classification-supervised-machine-learning/">GeeksforGeeks</a></li>
+                        <li><a target="_blank" href="https://www.youtube.com/watch?v=f7YB73F0zDo">ML Introduction: Classification</a></li>
+                        <li><a target="_blank" href="https://www.datascience.com/blog/regression-and-classification-machine-learning-algorithms">Regression vs. Classification</a></li>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="card" id="info_content">
-                    
-                    <h2>{{algo.algo_type}}</h2>
-                    {% for element in algo.preprocessers %}
-                    <h2> {{element.name}} </h2>
-                    {% endfor %}
-                    {% for element in algo.issues %}
-                    <h2>{{element.issue}}</h2>
-                    {% endfor %}
-                    <p>         </p>
-                    <p>         </p>
-                    
-                </div>
+        </div>
+    </div>
+    <div class="row"></div>
+    <h1>ML Regression in Action</h1>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-4 text-left">
+            <div class="card" id="description_card">
+                <h2>Description:</h2>
+                <br>
+                <h4>No. of Rows: {{rows}}</h4>
+                <h4>No. of Columns: {{columns}}</h4>
+
+            </div>
+            <br>
+            <div class="card" id="description_card">
+                <h2>Statistical Data:</h2>
+
+                <br> <br>{{describe | safe}}
+                <br>
+                <ol></ol>
+            </div>
+        </div>
+        <div class="col-md-8 text-left">
+
+            <div class="card" id="description_card">
+                <h2 style="margin-left:0px">Business Case:</h2>
+                <h1></h1>
+                <p>
+                </p>
+
+            </div>
+            <br>
+            <div class="card" id="description_card">
+                <h2>Dataset Head:</h2>
+                <br> {{data | safe}}
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center" id="desc_col">
+            <div class="card" id="description_card">
+                <h2>Data Question:</h2>
+                <p>?</p>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <div class="card" id="algorithm">
+                <h2>Choose Algorithm:</h2>
+                <br>
+                <br> {% for clusterer in clusterers %}
+                <br>
+                <a href="{{url_for('clusterer', clusterer_id=clusterer.id)}}" class="waves-effect waves-light btn-large" id="add">{{clusterer.name}}</a>
+                <br> {% endfor %}
+                <ol></ol>
+            </div>
+
+        </div>
+        <div class="col-md-3 text-left">
+            <div class="card" id="pyplot">
+                <h2>Visualisation:</h2>
+                <img src="data:image/png;base64, {{ plot_determine }}" id="plot" alt="plot">
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card" id="pyplot">
+                <h2>Visualisation:</h2>
+                <img src="data:image/png;base64, {{ plot_url }}" id="plot" alt="plot">
+            </div>
+        </div>
+    </div>
+
 </div>
 
+</div>
 
 {% endblock %}
-
-

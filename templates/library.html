@@ -135,7 +135,7 @@
                             </div>
                             {% for type in types%}
 
-                            <a href="{{url_for('summary', type_id=type.id)}}" class="waves-effect waves-light btn btn_small" id="add">{{type.type_of_algorithm}}</a>
+                            <a href="{{url_for('summary', type_id=type.type_of_algorithm)}}" class="waves-effect waves-light btn btn_small" id="add">{{type.type_of_algorithm}}</a>
                             <div class="row">
                             </div>
                             {% endfor %}

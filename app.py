@@ -236,24 +236,24 @@ def classification():
     ## Dataset Variables
    
     dataset = pd.read_csv('Social_Network_Ads.csv')
-    dataset_head = dataset.head()
+    dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:4]
     describe = stats_data.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
     X = dataset.iloc[:, [2, 3]].values
     y = dataset.iloc[:, 4].values  
-    pred = '6.5'
+    pred = 'Choose Algorithm'
     
     return render_template('classification.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, classifiers = classifiers, algo = algo) 
 
 @app.route('/classifier/<classifier_id>')
 def classifier(classifier_id):
     classifiers = Classification.query.all()
-    
+    algo = AlgoTypes.query.filter_by(algotype_id = 2).first()
     # Importing the dataset
     dataset = pd.read_csv('Social_Network_Ads.csv')
-    dataset_head = dataset.head()
+    dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:4]
     describe = stats_data.describe()
     rows = len(dataset.index)
@@ -284,7 +284,7 @@ def classifier(classifier_id):
     # Making the Confusion Matrix
     from sklearn.metrics import confusion_matrix
     cm = confusion_matrix(y_test, y_pred)
-    df = pd.DataFrame(cm, index = ['Actual: Yes', 'Actual: No'], columns = ['Predicted: Yes', 'Predicted: No'])
+    df = pd.DataFrame(cm, index = ['Bought: Yes', 'Bought: No'], columns = ['Predicted: Yes', 'Predicted: No'])
     accuracy = (df.iloc[0,0] + df.iloc[1,1])
     accuracy =  "{}%".format(float(accuracy))
     
@@ -293,17 +293,17 @@ def classifier(classifier_id):
     from matplotlib.colors import ListedColormap
     img = StringIO.StringIO()
     
-    X_set, y_set = X_train, y_train
+    X_set, y_set = X_test, y_test
     X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                          np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
     plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
-                 alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+                 alpha = 0.85, cmap = ListedColormap(('darkred', 'darkgreen')))
     plt.xlim(X1.min(), X1.max())
     plt.ylim(X2.min(), X2.max())
     for i, j in enumerate(np.unique(y_set)):
         plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                     c = ListedColormap(('red', 'green'))(i), label = j)
-    plt.title('Naive Bayes (Training set)')
+    plt.title('Test Set Results')
     plt.xlabel('Age')
     plt.ylabel('Estimated Salary')
     plt.legend()
@@ -312,7 +312,7 @@ def classifier(classifier_id):
     plot_url = base64.b64encode(img.getvalue())
     plt.gcf().clear()
     
-    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy)
+    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy, algo = algo)
     
 
 @app.route('/regression')
@@ -325,7 +325,7 @@ def regression():
     describe = dataset.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
-    pred = '6.5'
+    pred = 'Choose Algorithm'
     
     return render_template('regression.html', data = dataset.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, regressors = regressors, algo = algo)
     
@@ -339,7 +339,7 @@ def regressor(regressor_id):
     describe = dataset.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
-    pred = '6.5'
+    pred = 'Choose Algorithm'
     choice = regressor_id
     plt.gcf().clear()
     
@@ -352,12 +352,16 @@ def regressor(regressor_id):
         img = StringIO.StringIO()
         plt.gcf().clear()
         X_grid = np.arange(min(X), max(X), 0.1)   
-        X_grid = X_grid.reshape(len(X_grid),1)         
+        X_grid = X_grid.reshape(len(X_grid),1)  
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
         plt.scatter(X,y, color = 'red')
-        plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'blue')    
-        plt.title('Reality Check (Polynomial Regression)')
+        plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)), color = 'darkblue')    
+        plt.ylim(ymin=0)
+        plt.title('Salary Estimate - Polynomial Regression')
         plt.xlabel('Position Level')
-        plt.ylabel('Salary')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
+        
         plt.savefig(img, format='png')
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())
@@ -380,10 +384,12 @@ def regressor(regressor_id):
         X_grid = np.arange(min(X), max(X), 0.1)
         X_grid = X_grid.reshape((len(X_grid), 1))
         plt.scatter(X, y, color = 'red')
-        plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-        plt.title('Truth or Bluff (Regression Model)')
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.plot(X_grid, regressor.predict(X_grid), color = 'darkblue')
+        plt.title('Salary Estimate - SVR')
         plt.xlabel('Position level')
-        plt.ylabel('Salary')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
         plt.savefig(img, format='png')
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())
@@ -400,11 +406,14 @@ def regressor(regressor_id):
         X_grid = np.arange(min(X), max(X), 0.01)
         X_grid = X_grid.reshape((len(X_grid), 1))
         plt.scatter(X, y, color = 'red')
-        plt.grid()
-        plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
-        plt.title('Reality Check (Random Forest Regression Model)')
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        
+        plt.plot(X_grid, regressor.predict(X_grid), color = 'darkblue')
+        plt.ylim(ymin=0)
+        plt.title('Salary Estimate - RandomForest Regression')
         plt.xlabel('Position level')
-        plt.ylabel('Salary')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
         plt.savefig(img, format='png')
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())
@@ -422,12 +431,12 @@ def clustering():
     algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
     dataset = pd.read_csv('Mall_Customers.csv')
     X = dataset.iloc[:, [3, 4]].values
-    dataset_head = dataset.head()
+    dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:5]
     describe = stats_data.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
-    pred = '6.5'
+    pred = 'Choose Algorithm'
     
     return render_template('clustering.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, clusterers = clusterers, algo = algo)
     
@@ -437,12 +446,12 @@ def clusterer(clusterer_id):
     algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
     dataset = pd.read_csv('Mall_Customers.csv')
     X = dataset.iloc[:, [3, 4]].values
-    dataset_head = dataset.head()
+    dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:5]
     describe = stats_data.describe()
     rows = len(dataset.index)
     columns = len(dataset.columns)
-    pred = '6.5'
+    pred = 'Choose Algorithm'
     
     choice = clusterer_id
     
@@ -473,7 +482,7 @@ def clusterer(clusterer_id):
         plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
         plt.title('Clusters of clients')
         plt.xlabel('Annual income (k$)')
-        plt.ylabel('Spending Score (1-100)')
+        plt.ylabel('Spending Score (1-100)', fontsize=12)
         plt.legend()
         plt.savefig(img, format='png')
         img.seek(0)
