@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 <div class="card text-center" id="main_card">
-    <h1>Machine Learning: Classification</h1>
+    <h1>Machine Learning: Clustering</h1>
     <div class="row"></div>
     <div class="row">
         <div class="col-md-12 text-center" id="desc_col">
@@ -8,16 +8,18 @@
                 <div class="row text-center">
                     <div class="col-md-3 text-left" id="text_card">
                         <h2>Overview:</h2>
-                        <p>
+                        <p>Clustering is a main task of exploratory data mining that involves dividing the population or data points with similar characteristics and assigning them into clusters. Clustering is a unsupervised learning method and is a common
+                            technique for statistical data analysis. The output of the algorithm would be a set of “labels” assigning each point to one of the clusters.
+
                         </p>
                     </div>
                     <div class="col-md-3 text-left" id="text_card">
 
                         <h2>Real life example:</h2>
-                        <li>Email spam detector</li>
-                        <li>Handwritten Digit Recognition.</li>
-                        <li>Speech Recognition.</li>
-                        <li>DNA Sequence Classification.</li>
+                        <li>Identifying groups of houses according to their characteristics.</li>
+                        <li>Classification of plants and animals given their features.</li>
+                        <li>Customer segmentation.</li>
+                        <li>Classify the crimes based on age groups.</li>
                     </div>
                     <div class="col-md-2 text-left" id="text_card">
                         <h2>Preprocessing:</h2>
@@ -33,10 +35,10 @@
                     </div>
                     <div class="col-md-2 text-left" id="text_card">
                         <h2>Read more:</h2>
-                        <li><a target="_blank" href="https://machinelearningmastery.com/classification-versus-regression-in-machine-learning/">Machine Learning Mastery</a></li>
-                        <li><a target="_blank" href="https://www.geeksforgeeks.org/regression-classification-supervised-machine-learning/">GeeksforGeeks</a></li>
-                        <li><a target="_blank" href="https://www.youtube.com/watch?v=f7YB73F0zDo">ML Introduction: Classification</a></li>
-                        <li><a target="_blank" href="https://www.datascience.com/blog/regression-and-classification-machine-learning-algorithms">Regression vs. Classification</a></li>
+                        <li><a target="_blank" href="https://medium.com/machine-learning-bites/machine-learning-unsupervised-learning-clustering-d686af2466e1">ML: Clustering</a></li>
+                        <li><a target="_blank" href="https://www.analyticsvidhya.com/blog/2016/11/an-introduction-to-clustering-and-different-methods-of-clustering/">An Introduction to Clustering</a></li>
+                        <li><a target="_blank" href="https://towardsdatascience.com/the-5-clustering-algorithms-data-scientists-need-to-know-a36d136ef68">Towards Data Science</a></li>
+                        <li><a target="_blank" href="https://www.geeksforgeeks.org/clustering-in-machine-learning/">Clustering in Machine Learning</a></li>
                     </div>
                 </div>
             </div>
@@ -57,7 +59,6 @@
             <br>
             <div class="card" id="description_card">
                 <h2>Statistical Data:</h2>
-
                 <br> <br>{{describe | safe}}
                 <br>
                 <ol></ol>
@@ -68,7 +69,9 @@
             <div class="card" id="description_card">
                 <h2 style="margin-left:0px">Business Case:</h2>
                 <h1></h1>
-                <p>
+                <p>One of the biggest shopping malls in the city collects information about their membership card subscribers. Database contains various columns like age, gender or annual income. Last column in a database is a spending score, computed for
+                    each client based on several criteria like money spent or weekly visits. We have been hired to segment mall clients into groups based on their annual income and spending score. We have to determine how many groups there would be and
+                    label them.
                 </p>
 
             </div>
@@ -84,7 +87,7 @@
         <div class="col-md-12 text-center" id="desc_col">
             <div class="card" id="description_card">
                 <h2>Data Question:</h2>
-                <p>?</p>
+                <p>Can we group subscribers the way that will help mall management readjust their advertisement strategy?</p>
 
             </div>
         </div>
@@ -102,9 +105,9 @@
             </div>
 
         </div>
-        <div class="col-md-3 text-left">
+        <div class="col-md-3 text-center">
             <div class="card" id="pyplot">
-                <h2>Visualisation:</h2>
+                <h2>Determining number of clusters:</h2>
                 <img src="data:image/png;base64, {{ plot_determine }}" id="plot" alt="plot">
             </div>
         </div>

@@ -1,18 +1,24 @@
 ## APP
 import os
-from flask import Flask, render_template, redirect, request, url_for, send_file, session
+from flask import Flask, render_template, redirect, request, url_for, send_file, session, request, flash
 from flask_sqlalchemy import SQLAlchemy
+
 import flask_whooshalchemy as wa
 from io import BytesIO
 import StringIO
 import base64
 
 ## FORMS 
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
-from wtforms import StringField
-from wtforms.validators import InputRequired,  DataRequired
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired,  DataRequired, Email, Length
+from flask_bootstrap import Bootstrap
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager,login_user, login_required, logout_user, current_user, UserMixin
+
 
 ## DATA
 import numpy as np
@@ -33,6 +39,37 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'BiggestSecret'
 db = SQLAlchemy(app)
+Bootstrap(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+ALLOWED_EXTENSIONS = set(['pdf'])
+
+
+
+## Login Form
+
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=6, max=80)])
+    remember = BooleanField('Remember Me')
+
+## Register Form
+
+class RegisterForm(FlaskForm):
+    email = StringField('email', validators=[InputRequired(), Email(message='Please enter correct email'), Length(max=50)])
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=6, max=80)])
+    
+    
+## Create database for Users
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'User'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), unique=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(80))    
 
 
 class CodeRepo(db.Model):
@@ -120,6 +157,54 @@ class RedFlags(db.Model):
     
    
 wa.whoosh_index(app, CodeRepo)     
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+## ROUTES - SIGNUP:
+
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    form = RegisterForm()
+    hashed_password = generate_password_hash(form.password.data, method='sha256')           ## password get hashed for security purposes
+    if form.validate_on_submit(): 
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+ 
+    return render_template('signup.html', form=form)                            ## passing signup form to signup template
+    
+    
+    
+## ROUTES - LOGIN:
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    
+    if form.validate_on_submit():                                               ## if form was submitted....
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('library'))
+        
+        return '<h1>Invalid username or password</h1>'         
+    
+    return render_template('login.html', form=form)                             ## passing login form to login template    
+
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
       
 @app.route('/')
 @app.route('/library')
@@ -475,15 +560,16 @@ def clusterer(clusterer_id):
         img = StringIO.StringIO()
         plt.gcf().clear()
         plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
-            s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
-        plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1],s = 100, c = 'blue',label = 'Standard') 
-        plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1],s = 100, c = 'green',label = 'Target') 
-        plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
-        plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
-        plt.title('Clusters of clients')
+            s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
+        plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1],s = 100, c = 'blue',label = 'Average') 
+        plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1],s = 100, c = 'green',label = 'Target Group') 
+        plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1],s = 100, c = 'orange',label = 'Overspenders') 
+        plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Careful') 
+        plt.title('Suggested Clusters')
         plt.xlabel('Annual income (k$)')
         plt.ylabel('Spending Score (1-100)', fontsize=12)
-        plt.legend()
+        plt.ylim(ymin=0)
+        plt.legend(fontsize = 9)
         plt.savefig(img, format='png')
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())
@@ -524,17 +610,18 @@ def clusterer(clusterer_id):
         img = StringIO.StringIO()
         plt.gcf().clear()
         plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
-                    s = 100, c = 'red',label = 'Careful')                            ## size for datapoints/color
-        plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1],s = 100, c = 'blue',label = 'Standard') 
-        plt.scatter(X[y_kmeans == 2, 0], X[y_kmeans == 2, 1],s = 100, c = 'green',label = 'Target') 
-        plt.scatter(X[y_kmeans == 3, 0], X[y_kmeans == 3, 1],s = 100, c = 'cyan',label = 'Careless') 
-        plt.scatter(X[y_kmeans == 4, 0], X[y_kmeans == 4, 1],s = 100, c = 'magenta',label = 'Sensible') 
+                    s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
+        plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1],s = 100, c = 'blue',label = 'Average') 
+        plt.scatter(X[y_kmeans == 2, 0], X[y_kmeans == 2, 1],s = 100, c = 'green',label = 'Target Group') 
+        plt.scatter(X[y_kmeans == 3, 0], X[y_kmeans == 3, 1],s = 100, c = 'orange',label = 'Overspenders') 
+        plt.scatter(X[y_kmeans == 4, 0], X[y_kmeans == 4, 1],s = 100, c = 'magenta',label = 'Careful') 
         plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],         ## cluster centers coordinates
-                    s = 300, c = 'yellow', label = 'Centroids')
-        plt.title('Clusters of clients')
+                    s = 200, c = 'black', label = 'Centroids')
+        plt.title('Suggested Clusters')
         plt.xlabel('Annual income (k$)')
-        plt.ylabel('Spending Score (1-100)')
-        plt.legend()
+        plt.ylabel('Spending Score (1-100)', fontsize=12)
+        plt.ylim(ymin=0)
+        plt.legend(fontsize = 9)
         plt.savefig(img, format='png')
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())

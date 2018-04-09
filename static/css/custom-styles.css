@@ -346,7 +346,7 @@ table {
     vertical-align: middle;
     border-width: 2px;
     padding: 20px;
-    margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: 0px;
     margin-right: 10px;
 }
@@ -418,14 +418,14 @@ a {
     border-style: solid;
     border-color: #222931;
     border-radius: 5px;
-    min-height: 260px;
+    /*min-height: 260px;*/
     vertical-align: middle;
     border-width: 1px;
     padding: 20px;
     margin-top: 10px;
     margin-bottom: 0px;
     margin-right: 10px;
-    min-height: 406px;
+    /*min-height: 406px;*/
 }
 
 
@@ -444,6 +444,7 @@ a {
 
 .col-md-8,
 .col-md-3,
+.col-md-4,
 .col-md-6 {
     padding-right: 0px;
 }
@@ -453,14 +454,14 @@ a {
     border-style: solid;
     border-color: #222931;
     border-radius: 5px;
-    min-height: 260px;
+    /*min-height: 260px;*/
     vertical-align: middle;
     border-width: 1px;
     padding: 20px;
     margin-top: 10px;
     margin-bottom: 0px;
     margin-right: 10px;
-    min-height: 406px;
+    /*min-height: 406px;*/
 }
 
 #pyplot h2 {
@@ -981,6 +982,7 @@ label {
         color: #FFCB9A;
         font-size: 15px;
     }
+    
 }
 
 @media(max-width:376px) {
@@ -1021,10 +1023,6 @@ label {
 
 @media(max-width:321px) {
 
-    #dropdown1 {
-        left: -80px !important;
-        top: 40px !important;
-    }
     .top-navbar .nav>li>a {
         padding: 10px 0px 10px 0px;
         font-size: 10px;
