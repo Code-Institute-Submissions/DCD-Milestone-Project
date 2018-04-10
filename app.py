@@ -11,7 +11,7 @@ import base64
 ## FORMS 
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired,  DataRequired, Email, Length
@@ -43,7 +43,7 @@ Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-ALLOWED_EXTENSIONS = set(['pdf'])
+ALLOWED_EXTENSIONS = set(['py'])
 
 
 
@@ -234,12 +234,18 @@ def add_request():
     return render_template ('add_request.html', types = types, complexities = complexities, methods = methods)
     
     
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS    
+    
+    
 @app.route('/new_code', methods = ['POST'])
 def new_code():
     codes = CodeRepo.query.all()
     ## fix author
     if not 'inputFile' in request.files:
         return render_template ('bad.html')
+        
     if not 'type_of_algorithm' in request.form or not 'complexity' in request.form:
         return render_template ('bad.html')    
     if not 'method' in request.form:
@@ -249,8 +255,11 @@ def new_code():
     
     else:    
         code_file = request.files['inputFile']
-        code_file = code_file.read()
-
+        if code_file and allowed_file(code_file.filename):
+            code_file = code_file.read()
+        else:
+            return render_template ('bad.html') 
+            
         code = CodeRepo(name=request.form['name'],
                         type_of_algorithm=request.form['type_of_algorithm'],
                         complexity=request.form['complexity'],
@@ -285,11 +294,13 @@ def update_code(code_id):
         return render_template ('bad.html')
     if 'inputFile' in request.files:
         code_file = request.files['inputFile']
-        code_file = code_file.read()
-        the_code.file = code_file
-        db.session.commit()
-        return redirect(url_for("library"))
-
+        if code_file and allowed_file(code_file.filename):
+            code_file = code_file.read()
+            the_code.file = code_file
+            db.session.commit()
+            return redirect(url_for("library"))
+        else:
+            return render_template ('bad.html')
     else:    
         db.session.commit()
         return redirect(url_for("library"))

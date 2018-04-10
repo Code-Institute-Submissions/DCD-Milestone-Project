@@ -235,7 +235,7 @@ html {
 #title_card {
     background-color: #2a333c;
     border-style: outset;
-    border-color: #2b4056;
+    border-color: #222931;
     border-radius: 15px;
     vertical-align: middle;
     border-width: 3px;
@@ -726,7 +726,13 @@ label {
     #pyplot h2 {
         font-size: 18px;
     }
-
+    #add {
+        width: 160px;
+    }
+    th,
+    tr {
+        font-size: 12px;
+    }
 }
 
 @media(max-width:1056px) {
@@ -888,6 +894,7 @@ label {
     #pyplot h2 {
         font-size: 15px;
     }
+
 }
 
 /* MAX WIDTHS: EXTRA-SMALL SCREEN---------------------------------------------*/
@@ -982,7 +989,7 @@ label {
         color: #FFCB9A;
         font-size: 15px;
     }
-    
+
 }
 
 @media(max-width:376px) {
@@ -1013,9 +1020,7 @@ label {
         font-size: 9px;
     }
 
-    #add {
-        width: 160px;
-    }
+
 
 
 
