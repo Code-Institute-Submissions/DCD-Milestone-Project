@@ -22,7 +22,7 @@ from flask_login import LoginManager,login_user, login_required, logout_user, cu
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')                                                           ## allowing plots to be displayed without opening new window
-import matplotlib.pyplot as plt, mpld3
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
