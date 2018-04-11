@@ -3,7 +3,6 @@ import os
 from flask import Flask, render_template, redirect, request, url_for, send_file, session, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from io import BytesIO
-import StringIO
 import base64
 
 ## Forms
