@@ -558,8 +558,8 @@ def classifier(classifier_id):
     
     # Choose classifier to fit the Training set
     classifier = GaussianNB() if classifier_id == '1'  \
-                              else KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p = 2) \
-                              if classifier_id == '2' else SVC(kernel = 'rbf', random_state = 0 )
+                              else KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p = 2) if classifier_id == '2' \
+                              else SVC(kernel = 'rbf', random_state = 0 )
     classifier.fit(X_train, y_train)
     
     # Predicting the Test set results
@@ -595,6 +595,8 @@ def classifier(classifier_id):
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
     plt.gcf().clear()
+    
+    
     
     return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy, algo = algo)
     
@@ -640,7 +642,7 @@ def clusterer(clusterer_id):
     
     choice = clusterer_id
     
-    if choice == '1':
+    if choice == '2':
         
         ## Using the dendogram to find the optimal number of clusters
         plt.gcf().clear()
@@ -676,7 +678,7 @@ def clusterer(clusterer_id):
         img.seek(0)
         plot_url = base64.b64encode(img.getvalue())
         
-    if choice == '2':    
+    if choice == '1':    
         
         ## Using the elbow method to find the optimal number of clusters
         wcss = []    ## initialize the list
