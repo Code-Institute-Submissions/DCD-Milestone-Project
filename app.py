@@ -422,7 +422,7 @@ def regressor(regressor_id):
         lin_reg.fit(X_poly, y)
         
         ## Visualising The Polynomial Regression
-        img = StringIO.StringIO()                                               ## initiate an image for holding the plot
+        img = BytesIO()                                               ## initiate an image for holding the plot
         plt.gcf().clear()                                                       ## clearing previous plots from canvas
         X_grid = np.arange(min(X), max(X), 0.1)   
         X_grid = X_grid.reshape(len(X_grid),1)  
@@ -456,7 +456,7 @@ def regressor(regressor_id):
         regressor = SVR(kernel = 'rbf')                                         ## Kernel choice - linear, poly or gaussian(rbf)
         regressor.fit(X,y)
         
-        img = StringIO.StringIO()
+        img = BytesIO()
         X_grid = np.arange(min(X), max(X), 0.1)
         X_grid = X_grid.reshape((len(X_grid), 1))
         plt.scatter(X, y, color = 'red')
@@ -482,7 +482,7 @@ def regressor(regressor_id):
         regressor.fit(X,y)
         
         # Visualising the Regression results (for higher resolution and smoother curve)
-        img = StringIO.StringIO()
+        img = BytesIO()
         X_grid = np.arange(min(X), max(X), 0.01)                                ## increase the resolution
         X_grid = X_grid.reshape((len(X_grid), 1))   
         plt.scatter(X, y, color = 'red')
@@ -576,7 +576,7 @@ def classifier(classifier_id):
     
     # Visualising the Test set results with the heatmap
     from matplotlib.colors import ListedColormap
-    img = StringIO.StringIO()
+    img = BytesIO()
     
     X_set, y_set = X_test, y_test
     X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
@@ -646,7 +646,7 @@ def clusterer(clusterer_id):
         ## Using the dendogram to find the optimal number of clusters
         plt.gcf().clear()
         dendrogram = sch.dendrogram(sch.linkage(X,method = 'ward'))
-        img_dendrogram = StringIO.StringIO()
+        img_dendrogram = BytesIO()
         plt.title("Dendrogram")
         plt.xlabel('Customers')
         plt.ylabel('Euclidean distances')
@@ -660,7 +660,7 @@ def clusterer(clusterer_id):
         y_hc = hc.fit_predict(X)
         
         ## Visualising the clusters 
-        img = StringIO.StringIO()
+        img = BytesIO()
         plt.gcf().clear()
         plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
             s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
@@ -693,7 +693,7 @@ def clusterer(clusterer_id):
         
         ## Visualising Elbow Method
         plt.gcf().clear()
-        img_elbow = StringIO.StringIO()
+        img_elbow = BytesIO()
         plt.plot(range(1,11), wcss)
         plt.title('The Elbow Method')
         plt.xlabel('Number of clusters')
@@ -713,7 +713,7 @@ def clusterer(clusterer_id):
         y_kmeans = kmeans.fit_predict(X)       ## fit_predict returns a cluster for each observation 
         
         ## Visualising the clusters
-        img = StringIO.StringIO()
+        img = BytesIO()
         plt.gcf().clear()
         plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
                     s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
