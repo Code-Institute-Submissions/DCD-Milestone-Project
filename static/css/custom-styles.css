@@ -103,7 +103,6 @@ table {
 
 label {
     margin-left: 30px;
-    font-size: 20px;
     font-weight: normal;
     color: #FFCB9A;
     font-size: 16px;
@@ -569,6 +568,10 @@ tr {
     vertical-align: middle !important;
 }
 
+#dataTables-example_info {
+    color: white;
+}
+
 .pagination>.active>a {
     background-color: #1a2026;
     border-color: #1a2026;
@@ -833,6 +836,10 @@ input[type="text"].valid {
     }
     #repo_content li {
         font-size: 12px;
+    }
+    #add {
+        width: 140px;
+        margin-left: 10px;
     }
 
 }
