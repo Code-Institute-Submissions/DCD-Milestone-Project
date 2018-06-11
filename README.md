@@ -115,9 +115,15 @@ Password: testtest
 
 ## Test Suite:
 
-### Travis CI
+### Travis CI:
 
 [![Build Status](https://travis-ci.org/LukaszMalucha/DCD-Milestone-Project.svg?branch=master)](https://travis-ci.org/LukaszMalucha/DCD-Milestone-Project)
+
+### Test Files:
+
+##### test.py
+
+### Other Tests:
 
 #### Login/Signin Form Test:
 1. Is data properly saved in datbase
