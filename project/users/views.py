@@ -10,8 +10,8 @@ users_blueprint = Blueprint(
     )
 
 from app import db
-from forms import *
-from models import User
+from .forms import *
+from .models import User
 
 ########################################################################## USER VIEWS ###################################################################################################################  
 
