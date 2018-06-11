@@ -1,7 +1,12 @@
 from flask import Flask, render_template, redirect, request, url_for, send_file, session, request, flash, Blueprint
 from flask_login import LoginManager,login_user, login_required, logout_user, current_user, UserMixin, AnonymousUserMixin
+
+## PLOT DISPLAY
 from io import BytesIO
 import base64
+
+
+## DATA PACKAGES
 
 import numpy as np
 import matplotlib
@@ -38,6 +43,8 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import KMeans
 
 
+## BLUEPRINT INIT
+
 algorithms_blueprint = Blueprint(
     'algorithms', __name__,
     template_folder="templates"
@@ -46,10 +53,10 @@ algorithms_blueprint = Blueprint(
 from .models import *
 
 
-#################################################################### ML ESTIMATOR TYPES SYMMARY ###########################################################################################################    
+#################################################################### ML ESTIMATOR TYPES SUMMARY #####################################################################################################################    
     
     
-## ML TYPE CHOICE HANDLING    
+## ML TYPE CHOICE HANDLING ##########################################################     
     
 @algorithms_blueprint.route('/summary/<type_id>')
 def summary(type_id):
@@ -60,7 +67,7 @@ def summary(type_id):
     else:
         return redirect(url_for("algorithms.clustering"))
         
-## REGRESSION INITIATION
+## REGRESSION INITIATION ############################################################
 
 @algorithms_blueprint.route('/regression')
 def regression():
@@ -82,7 +89,7 @@ def regression():
                             columns = columns, regressors = regressors, algo = algo, 
                             user = current_user.username)
    
-## REGRESSION ALGORITHM CHOICE HANDLING
+## REGRESSION ALGORITHM CHOICE HANDLING ############################################
     
 @algorithms_blueprint.route('/regressor/<regressor_id>')
 def regressor(regressor_id):
@@ -195,7 +202,7 @@ def regressor(regressor_id):
                             regressors = regressors, algo = algo, user = current_user.username)
 
         
-## CLASSIFICATION INITIATION
+## CLASSIFICATION INITIATION ########################################################
 
 @algorithms_blueprint.route('/classification')
 def classification():
@@ -219,7 +226,7 @@ def classification():
                             columns = columns, classifiers = classifiers, 
                             algo = algo, user = current_user.username) 
 
-## CLASSIFICATION ALGORITHM CHOICE HANDLING
+## CLASSIFICATION ALGORITHM CHOICE HANDLING #########################################
 
 @algorithms_blueprint.route('/classifier/<classifier_id>')
 def classifier(classifier_id):
@@ -294,7 +301,7 @@ def classifier(classifier_id):
                             algo = algo, user = current_user.username)
     
 
-## CLUSTERING INITIATION
+## CLUSTERING INITIATION ############################################################
 
 @algorithms_blueprint.route('/clustering')
 def clustering():
@@ -317,7 +324,7 @@ def clustering():
                             clusterers = clusterers, algo = algo, 
                             user = current_user.username)
    
-## CLUSTERING ALGORITHM CHOICE HANDLING   
+## CLUSTERING ALGORITHM CHOICE HANDLING #############################################  
     
 @algorithms_blueprint.route('/clusterer/<clusterer_id>')
 def clusterer(clusterer_id):

@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for, send_file,
 from flask_login import LoginManager,login_user, login_required, logout_user, current_user, UserMixin, AnonymousUserMixin
 
 
+## Blueprint Init
 
 users_blueprint = Blueprint(
     'users', __name__,
@@ -12,7 +13,10 @@ from app import db
 from forms import *
 from models import User
 
-## SIGN UP:
+########################################################################## USER VIEWS ###################################################################################################################  
+
+
+## SIGN UP ##########################################################################
 
 @users_blueprint.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -28,7 +32,7 @@ def signup():
     return render_template('signup.html', form=form)                            ## passing signup form to signup template
     
     
-## LOGIN:
+## LOGIN ############################################################################
 
 @users_blueprint.route('/login', methods=["GET", "POST"])
 def login():
@@ -46,7 +50,7 @@ def login():
     return render_template('login.html', form=form)                             ## passing login form to login template    
 
 
-## LOGOUT
+## LOGOUT ###########################################################################
 
 @users_blueprint.route('/logout')
 @login_required

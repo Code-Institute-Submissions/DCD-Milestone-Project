@@ -1,6 +1,8 @@
 from app import db
 from flask_login import UserMixin
 
+## Code Main Repository
+
 class CodeRepo(db.Model):
     __searchable__ = ['name', 'type_of_algorithm','complexity','method','author']
     __tablename__ = 'CodeRepo'
@@ -13,6 +15,7 @@ class CodeRepo(db.Model):
     file = db.Column(db.LargeBinary)
     downloads = db.Column(db.Integer)
 
+## Algorithm types
 
 class Types(db.Model):
     __tablename__ = 'Types'

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, redirect, request, url_for, send_file, session, request, flash, Blueprint
 from flask_login import LoginManager,login_user, login_required, logout_user, current_user, UserMixin, AnonymousUserMixin
-# from io import BytesIO
 
+
+## Blueprint Init
 
 library_blueprint = Blueprint(
     'library', __name__,
@@ -10,12 +11,14 @@ library_blueprint = Blueprint(
     
 from .models import *
 
+## Define file upload allowed extensions
+
 ALLOWED_EXTENSIONS = set(['py'])         
     
-########################################################################## MAIN ROUTES ###################################################################################################################    
+########################################################################## MAIN DASHBOARD ###################################################################################################################    
 
 
-## MAIN DASHBOARD - "LIBRARY"
+## MAIN DASHBOARD - "LIBRARY" #######################################################
       
 @library_blueprint.route('/')
 @library_blueprint.route('/library')
@@ -27,7 +30,7 @@ def library():
     return render_template("library.html", codes = codes, types = types, 
                             user = current_user.username)
 
-## DOWNLOAD TEMPLATE    
+## DOWNLOAD TEMPLATE ################################################################    
     
 @library_blueprint.route('/download_code/<code_id>', methods=['GET'])
 def download_code(code_id):
@@ -40,7 +43,7 @@ def download_code(code_id):
                      attachment_filename='{}.py'.format(the_code.name),         ## return file
                      as_attachment=True)
   
-## INITIATE TEMPLATE UPLOAD  
+## INITIATE TEMPLATE UPLOAD ######################################################### 
     
 @library_blueprint.route('/add_request')
 def add_request():
@@ -52,14 +55,14 @@ def add_request():
     return render_template ('add_request.html', types = types, complexities = complexities, 
                             methods = methods, user = current_user.username)
     
-## DEFINE ALLOWED TEMPLATE FILE FORMAT    
+## DEFINE ALLOWED TEMPLATE FILE FORMAT ##############################################   
     
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS    
     
     
-## UPLOAD NEW TEMPLATE HANDLING    
+## UPLOAD NEW TEMPLATE HANDLING #####################################################   
     
 @library_blueprint.route('/new_code', methods = ['POST'])
 def new_code():
@@ -96,7 +99,7 @@ def new_code():
         db.session.commit()
         return redirect(url_for("library.library"))
 
-## EDITING TEMPLATE INITIATION
+## EDITING TEMPLATE INITIATION ######################################################
     
 @library_blueprint.route('/edit_code/<code_id>')
 def edit_code(code_id):
@@ -109,7 +112,7 @@ def edit_code(code_id):
                             user = current_user.username)    
     
     
-## UPDATE TEMPLATE HANDLING
+## UPDATE TEMPLATE HANDLING #########################################################
 
 @library_blueprint.route('/update_code/<code_id>', methods=["POST"])
 def update_code(code_id):
@@ -141,7 +144,7 @@ def update_code(code_id):
         db.session.commit()
         return redirect(url_for("library.library"))
     
-## DELETE TEMPLATE HANDLING    
+## DELETE TEMPLATE HANDLING #########################################################    
     
 @library_blueprint.route('/delete_code/<code_id>')
 def delete_code(code_id):

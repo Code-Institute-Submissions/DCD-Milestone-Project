@@ -3,9 +3,8 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired,  DataRequired, Email, Length
-# from flask_bootstrap import Bootstrap
 from werkzeug.security import generate_password_hash, check_password_hash
-# from flask_login import LoginManager,login_user, login_required, logout_user, current_user, UserMixin, AnonymousUserMixin
+
 
 
 
