@@ -37,7 +37,7 @@ def signup():
 @users_blueprint.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    message = '<h1>Invalid username or password</h1>'  
+    message = 'Invalid username or password'  
     
     if form.validate_on_submit():                                               ## if form was submitted....
         user = User.query.filter_by(username=form.username.data).first()

@@ -12,11 +12,11 @@ Login
 
 {% block content %}
     <div class="container">
-    {% if message %}
-    {{ message }}
-    {% endif %}
       <form class="form-signin" method="POST" action="/login">
         <h2 class="form-signin-heading">Please Log in</h2>
+        {% if message %}
+        <p class="help-block" style="color:red;">{{ message }}</p>
+        {% endif %}
         <!-- Fields from app.py LoginForm   --->
         {{ form.hidden_tag() }}        
         {{ wtf.form_field(form.username)}}

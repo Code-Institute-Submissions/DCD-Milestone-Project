@@ -76,3 +76,7 @@ body {
   border-color: #222931;
   color: white;
 }
+
+.help-block {
+  color: red;
+}
