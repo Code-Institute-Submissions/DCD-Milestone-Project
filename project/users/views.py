@@ -37,6 +37,7 @@ def signup():
 @users_blueprint.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    message = '<h1>Invalid username or password</h1>'  
     
     if form.validate_on_submit():                                               ## if form was submitted....
         user = User.query.filter_by(username=form.username.data).first()
@@ -45,7 +46,7 @@ def login():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('library.library'))
         
-        return '<h1>Invalid username or password</h1>'         
+        return render_template('login.html', form=form, message=message)          
     
     return render_template('login.html', form=form)                             ## passing login form to login template    
 
