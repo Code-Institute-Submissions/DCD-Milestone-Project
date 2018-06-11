@@ -2,7 +2,7 @@
 
 ## Link
 
-https://mldashboard.herokuapp.com/
+https://mldashboardproject.herokuapp.com/
 
 ## Project Case:
 
