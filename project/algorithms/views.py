@@ -54,10 +54,10 @@ algorithms_blueprint = Blueprint(
 from .models import *
 
 
-#################################################################### ML ESTIMATOR TYPES SYMMARY ###########################################################################################################    
+#################################################################### ML ESTIMATOR TYPES SUMMARY #####################################################################################################################    
     
     
-## ML TYPE CHOICE HANDLING    
+## ML TYPE CHOICE HANDLING ##########################################################     
     
 @algorithms_blueprint.route('/summary/<type_id>')
 def summary(type_id):
@@ -68,7 +68,7 @@ def summary(type_id):
     else:
         return redirect(url_for("algorithms.clustering"))
         
-## REGRESSION INITIATION
+## REGRESSION INITIATION ############################################################
 
 @algorithms_blueprint.route('/regression')
 def regression():
@@ -85,9 +85,12 @@ def regression():
     columns = len(dataset.columns)
     pred = 'Choose Algorithm'
     
-    return render_template('regression.html', data = dataset.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, regressors = regressors, algo = algo, user = current_user.username)
+    return render_template('regression.html', data = dataset.to_html(),  
+                            describe = describe.to_html(), pred = pred, rows = rows, 
+                            columns = columns, regressors = regressors, algo = algo, 
+                            user = current_user.username)
    
-## REGRESSION ALGORITHM CHOICE HANDLING
+## REGRESSION ALGORITHM CHOICE HANDLING ############################################
     
 @algorithms_blueprint.route('/regressor/<regressor_id>')
 def regressor(regressor_id):
@@ -112,8 +115,24 @@ def regressor(regressor_id):
         lin_reg = LinearRegression()
         lin_reg.fit(X_poly, y)
         
-      
-        plot_url = '../../static/img/poly.png'
+        ## Visualising The Polynomial Regression
+        img = BytesIO()                                               ## initiate an image for holding the plot
+        plt.gcf().clear()                                                       ## clearing previous plots from canvas
+        X_grid = np.arange(min(X), max(X), 0.1)   
+        X_grid = X_grid.reshape(len(X_grid),1)  
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.scatter(X,y, color = 'red')
+        plt.plot(X_grid, lin_reg.predict(poly_reg.fit_transform(X_grid)),color ='darkblue')    
+        plt.ylim(ymin=0)
+        plt.title('Salary Estimate - Polynomial Regression')
+        plt.xlabel('Position Level')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
+        
+        plt.savefig(img, format='png')                                          ## save generated plot as an image    
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue())
+        plt.gcf().clear()
         
         ## Predicting result with Polynomial Regression
         pred = lin_reg.predict(poly_reg.fit_transform(6.5))
@@ -131,7 +150,20 @@ def regressor(regressor_id):
         regressor = SVR(kernel = 'rbf')                                         ## Kernel choice - linear, poly or gaussian(rbf)
         regressor.fit(X,y)
         
-        plot_url = '../../static/img/svr.png'
+        img = BytesIO()
+        X_grid = np.arange(min(X), max(X), 0.1)
+        X_grid = X_grid.reshape((len(X_grid), 1))
+        plt.scatter(X, y, color = 'red')
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.plot(X_grid, regressor.predict(X_grid), color = 'darkblue')
+        plt.title('Salary Estimate - SVR')
+        plt.xlabel('Position level')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue())
+        plt.gcf().clear()
         
         # Predicting result - has to be changed as scaling was applied 
         pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))     ## transform value into array with numpy.array
@@ -149,8 +181,16 @@ def regressor(regressor_id):
         X_grid = X_grid.reshape((len(X_grid), 1))   
         plt.scatter(X, y, color = 'red')
         sns.set_style("darkgrid", {"axes.facecolor": ".9"})
-        
-        plot_url = '../../static/img/rforest.png'
+        plt.plot(X_grid, regressor.predict(X_grid), color = 'darkblue')
+        plt.ylim(ymin=0)
+        plt.title('Salary Estimate - RandomForest Regression')
+        plt.xlabel('Position level')
+        plt.ylabel('Salary', fontsize=12)
+        plt.yticks(fontsize=10)
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue())
+        plt.gcf().clear()
         
         # Predicting result
         pred = regressor.predict(6.5)
@@ -163,7 +203,7 @@ def regressor(regressor_id):
                             regressors = regressors, algo = algo, user = current_user.username)
 
         
-## CLASSIFICATION INITIATION
+## CLASSIFICATION INITIATION ########################################################
 
 @algorithms_blueprint.route('/classification')
 def classification():
@@ -182,9 +222,12 @@ def classification():
     y = dataset.iloc[:, 4].values  
     pred = 'Choose Algorithm'
     
-    return render_template('classification.html', data = dataset_head.to_html(),  describe = describe.to_html(), pred = pred, rows = rows, columns = columns, classifiers = classifiers, algo = algo, user = current_user.username) 
+    return render_template('classification.html', data = dataset_head.to_html(),  
+                            describe = describe.to_html(), pred = pred, rows = rows, 
+                            columns = columns, classifiers = classifiers, 
+                            algo = algo, user = current_user.username) 
 
-## CLASSIFICATION ALGORITHM CHOICE HANDLING
+## CLASSIFICATION ALGORITHM CHOICE HANDLING #########################################
 
 @algorithms_blueprint.route('/classifier/<classifier_id>')
 def classifier(classifier_id):
@@ -231,17 +274,35 @@ def classifier(classifier_id):
     from matplotlib.colors import ListedColormap
     img = BytesIO()
     
-    if classifier_id == '1':
-       plot_url = '../../static/img/k-nearest.png'
-    elif classifier_id == '2':
-       plot_url = '../../static/img/kernelsvm.png'
-    else: 
-       plot_url = '../../static/img/naive.png'    
-       
-    return render_template('classification.html', data = dataset_head.to_html(), describe = describe.to_html(), cma = df.to_html(), plot_url=plot_url, rows = rows, columns = columns, classifiers = classifiers, acc = accuracy, algo = algo, user = current_user.username)
+    X_set, y_set = X_test, y_test
+    X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                         np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+    plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+                 alpha = 0.85, cmap = ListedColormap(('darkred', 'darkgreen')))
+    plt.xlim(X1.min(), X1.max())
+    plt.ylim(X2.min(), X2.max())
+    for i, j in enumerate(np.unique(y_set)):
+        plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                    c = ListedColormap(('red', 'green'))(i), label = j)
+    plt.title('Test Set Results')
+    plt.xlabel('Age')
+    plt.ylabel('Estimated Salary')
+    plt.legend()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    plt.gcf().clear()
+    
+    
+    
+    return render_template('classification.html', data = dataset_head.to_html(), 
+                            describe = describe.to_html(), cma = df.to_html(), 
+                            plot_url=plot_url, rows = rows, columns = columns, 
+                            classifiers = classifiers, acc = accuracy, 
+                            algo = algo, user = current_user.username)
     
 
-## CLUSTERING INITIATION
+## CLUSTERING INITIATION ############################################################
 
 @algorithms_blueprint.route('/clustering')
 def clustering():
@@ -261,9 +322,10 @@ def clustering():
     return render_template('clustering.html', data = dataset_head.to_html(),  
                             describe = describe.to_html(), pred = pred, 
                             rows = rows, columns = columns, 
-                            clusterers = clusterers, algo = algo, user = current_user.username)
+                            clusterers = clusterers, algo = algo, 
+                            user = current_user.username)
    
-## CLUSTERING ALGORITHM CHOICE HANDLING   
+## CLUSTERING ALGORITHM CHOICE HANDLING #############################################  
     
 @algorithms_blueprint.route('/clusterer/<clusterer_id>')
 def clusterer(clusterer_id):
@@ -285,19 +347,102 @@ def clusterer(clusterer_id):
     if choice == '2':
         
         ## Using the dendogram to find the optimal number of clusters
+        plt.gcf().clear()
+        dendrogram = sch.dendrogram(sch.linkage(X,method = 'ward'))
+        img_dendrogram = BytesIO()
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.title("Dendrogram")
+        plt.xlabel('Customers')
+        plt.ylabel('Euclidean distances')
+        plt.savefig(img_dendrogram, format='png')
+        img_dendrogram.seek(0)
+        plot_determine = base64.b64encode(img_dendrogram.getvalue())
+        ## Result = 5
         
-        plot_determine = '../../static/img/dendro.png'
-        plot_url = '../../static/img/hierarch.png'
+        ## Fitting Hierarchical Clustering to the dataset (optimal clusters = 5)
+        hc = AgglomerativeClustering(n_clusters = 5, affinity = 'euclidean', linkage = 'ward')
+        y_hc = hc.fit_predict(X)
+        
+        ## Visualising the clusters 
+        img = BytesIO()
+        plt.gcf().clear()
+        plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
+            s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
+        plt.scatter(X[y_hc == 1, 0], X[y_hc == 1, 1],s = 100, c = 'blue',label = 'Average') 
+        plt.scatter(X[y_hc == 2, 0], X[y_hc == 2, 1],s = 100, c = 'green',label = 'Target Group') 
+        plt.scatter(X[y_hc == 3, 0], X[y_hc == 3, 1],s = 100, c = 'orange',label = 'Overspenders') 
+        plt.scatter(X[y_hc == 4, 0], X[y_hc == 4, 1],s = 100, c = 'magenta',label = 'Careful') 
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.title('Suggested Clusters')
+        plt.xlabel('Annual income (k$)')
+        plt.ylabel('Spending Score (1-100)', fontsize=12)
+        plt.ylim(ymin=0)
+        plt.legend(fontsize = 9)
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue())
         
     if choice == '1':    
         
-        plot_determine = '../../static/img/elbow.png'
-        plot_url = '../../static/img/kmeans.png'
+        ## Using the elbow method to find the optimal number of clusters
+        wcss = []    ## initialize the list
+        for i in range(1, 11):
+            kmeans = KMeans(n_clusters = i,        ## from 1 to 10
+                            init = 'k-means++',    ## k-means++ to avoid random initialziation trap
+                            max_iter = 300,        ## 300 is deafault        
+                            n_init  = 10,          ## algorithm runs with different initial centroids      
+                            random_state = 0)
+            kmeans.fit(X)
+            wcss.append(kmeans.inertia_)           ## to compute wcss   
+        ## Result = 5    
         
+        ## Visualising Elbow Method
+        plt.gcf().clear()
+        img_elbow = BytesIO()
+        plt.plot(range(1,11), wcss)
+        plt.title('The Elbow Method')
+        plt.xlabel('Number of clusters')
+        plt.ylabel('WCSS')
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.savefig(img_elbow, format='png')
+        img_elbow.seek(0)
+        plot_determine = base64.b64encode(img_elbow.getvalue())
+        
+        
+        
+        ## Applying k-means to the mall dataset - from the plot we can see that optimum is 5 clusters.
+        kmeans = KMeans(n_clusters = 5,
+                        init = 'k-means++',    ## k-means++ to avoid random initialziation trap
+                        max_iter = 300,        ## 300 is deafault        
+                        n_init  = 10,          ## algorithm runs with different initial centroids      
+                        random_state = 0)
+        y_kmeans = kmeans.fit_predict(X)       ## fit_predict returns a cluster for each observation 
+        
+        ## Visualising the clusters
+        img = BytesIO()
+        plt.gcf().clear()
+        sns.set_style("darkgrid", {"axes.facecolor": ".9"})
+        plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1],   ## specify that we want first cluster + first column vs second column for 'y'
+                    s = 100, c = 'red',label = 'Savers')                            ## size for datapoints/color
+        plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1],s = 100, c = 'blue',label = 'Average') 
+        plt.scatter(X[y_kmeans == 2, 0], X[y_kmeans == 2, 1],s = 100, c = 'green',label = 'Target Group') 
+        plt.scatter(X[y_kmeans == 3, 0], X[y_kmeans == 3, 1],s = 100, c = 'orange',label = 'Overspenders') 
+        plt.scatter(X[y_kmeans == 4, 0], X[y_kmeans == 4, 1],s = 100, c = 'magenta',label = 'Careful') 
+        plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],         ## cluster centers coordinates
+                    s = 200, c = 'black', label = 'Centroids')
+        plt.title('Suggested Clusters')
+        plt.xlabel('Annual income (k$)')
+        plt.ylabel('Spending Score (1-100)', fontsize=12)
+        plt.ylim(ymin=0)
+        plt.legend(fontsize = 9)
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue())
         
         
     return render_template('clustering.html', data = dataset_head.to_html(), 
                             describe = describe.to_html(), plot_determine = plot_determine, 
                             plot_url=plot_url, rows = rows, columns = columns, 
-                            clusterers = clusterers, algo = algo, user = current_user.username)
+                            clusterers = clusterers, algo = algo, 
+                            user = current_user.username)
     
