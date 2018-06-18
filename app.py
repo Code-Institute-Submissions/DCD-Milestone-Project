@@ -1,6 +1,6 @@
 ## App Utilities
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_bootstrap import Bootstrap
@@ -49,6 +49,15 @@ class Anonymous(AnonymousUserMixin):
     
     
 login_manager.anonymous_user = Anonymous
+
+
+@app.errorhandler(404)
+def error404(error):
+    return render_template('404.html'), 404
+    
+@app.errorhandler(500)
+def error500(error):
+    return render_template('500.html'), 500
  
 
 
@@ -57,6 +66,5 @@ login_manager.anonymous_user = Anonymous
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port, debug=False) 
             
-  
