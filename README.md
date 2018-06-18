@@ -156,7 +156,13 @@ Password: testtest
 1. Done with Inspect element tool as a last part of the test suite
 
 
-#
+## CREDITS & INSPIRATIONS
+
+#### Error 404 template:
+
+Robin Selmer:
+
+https://codepen.io/robinselmer/pen/vJjbOZ
 
 
 
