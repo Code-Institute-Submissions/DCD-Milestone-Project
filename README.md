@@ -123,10 +123,10 @@ Password: testtest
 
 ##### test.py
 
-### Other Tests:
+### Manual Tests:
 
 #### Login/Signin Form Test:
-1. Is data properly saved in datbase
+1. Is data properly saved in database
 2. Are different templates properly routing to signup and login urls
 3. Are form fields values properly validated (example: email field)
 4. Is password properly hashed in a signup file
@@ -142,7 +142,7 @@ Password: testtest
 1. Fields properly connected to the database
 2. Forms are populating database correctly
 3. Accepted input file
-4. "Field is missing" test
+4. Missing Input test
 
  
 #### Summary Classification/Regression/Clustering
