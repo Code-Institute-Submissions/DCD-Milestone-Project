@@ -63,11 +63,11 @@ from project.library.models import Types
 @algorithms_blueprint.route('/summary/<type_id>')
 def summary(type_id):
     if type_id == "Regression":
-        return redirect(url_for("regression"))
+        return redirect(url_for("algorithms.regression"))
     elif type_id == "Classification": 
-        return redirect(url_for("classification"))
+        return redirect(url_for("algorithms.classification"))
     else:
-        return redirect(url_for("clustering"))
+        return redirect(url_for("algorithms.clustering"))
         
 ## REGRESSION INITIATION ############################################################
 
