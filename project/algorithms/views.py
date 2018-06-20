@@ -212,7 +212,7 @@ def classification():
     
     ## Describe dataset
    
-    dataset = pd.read_csv('/static/datasets/Social_Network_Ads.csv')
+    dataset = pd.read_csv('../../static/datasets/Social_Network_Ads.csv')
     dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:4]
     describe = stats_data.describe()
@@ -235,7 +235,7 @@ def classifier(classifier_id):
     algo = AlgoTypes.query.filter_by(algotype_id = 2).first()
     
     ## Describe dataset
-    dataset = pd.read_csv('/static/datasets/Social_Network_Ads.csv')
+    dataset = pd.read_csv('../../static/datasets/Social_Network_Ads.csv')
     dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:4]
     describe = stats_data.describe()
@@ -298,7 +298,7 @@ def clustering():
     algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
     
     ## Describe dataset
-    dataset = pd.read_csv('/static/datasets/Mall_Customers.csv')
+    dataset = pd.read_csv('../../static/datasets/Mall_Customers.csv')
     X = dataset.iloc[:, [3, 4]].values
     dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:5]
@@ -321,7 +321,7 @@ def clusterer(clusterer_id):
     algo = AlgoTypes.query.filter_by(algotype_id = 3).first()
     
     ## Describe dataset
-    dataset = pd.read_csv('/static/datasets/Mall_Customers.csv')
+    dataset = pd.read_csv('../../static/datasets/Mall_Customers.csv')
     X = dataset.iloc[:, [3, 4]].values
     dataset_head = dataset.head(10)
     stats_data = dataset.iloc[:,2:5]
